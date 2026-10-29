@@ -186,7 +186,7 @@ MonoBehaviour:
   keepMeshRenderer: 1
   capDepthMetres: 0
   fractureMesh: {fileID: 4300000, guid: 8c9de0b0bfe52e242a86ad83e245d1f0, type: 2}
-  preInitialize: 0
+  preInitialize: 1
   destroyThreshold: 0.005
   supportHeightRatio: 0.1
   bakedGraphData: {fileID: 11400000, guid: 8c2507f8cf6ec654bb6d4944a201b8d4, type: 2}
@@ -329,7 +329,7 @@ MonoBehaviour:
   keepMeshRenderer: 1
   capDepthMetres: 0
   fractureMesh: {fileID: 4300000, guid: e57c3be4a1410704c84890c6e48e9c9f, type: 2}
-  preInitialize: 0
+  preInitialize: 1
   destroyThreshold: 0.005
   supportHeightRatio: 0.1
   bakedGraphData: {fileID: 11400000, guid: 8a77fe7b4e2b9dd45ad38571f365c80b, type: 2}
@@ -473,7 +473,7 @@ MonoBehaviour:
   keepMeshRenderer: 1
   capDepthMetres: 0
   fractureMesh: {fileID: 4300000, guid: 3d063cd4c51070a4aa6ba030bd6a88b1, type: 2}
-  preInitialize: 0
+  preInitialize: 1
   destroyThreshold: 0.005
   supportHeightRatio: 0.1
   bakedGraphData: {fileID: 11400000, guid: f564398e05d4f1747a800d77f778202b, type: 2}

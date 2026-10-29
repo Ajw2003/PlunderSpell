@@ -28,12 +28,17 @@ namespace Plunderspell.Raid
         private const float TakeDespawnDelaySeconds = 1f;
         private const float CutRadius = 1.5f;
         private const float CutForce = 12f;
+        private const float CutStopShort = 2f;
         private const float NavRefreshRadius = 2f;
 
         [SerializeField] private OphanTuning _tuning = new OphanTuning();
 
         [Tooltip("Test switch until the demand (#419) exists: every raid is hunted. Off, the Ophan never comes.")]
         [SerializeField] private bool _huntEveryRaid = true;
+
+        [Tooltip("Layers the charged beam's ray and sphere cast test. Narrow it to the castle's layers so the single " +
+                 "look ray is not stopped by players, guards or props before it reaches the stone.")]
+        [SerializeField] private LayerMask _stoneMask = ~0;
 
         /// <summary>Set by check scripts and tests to switch hunts on or off without touching the scene.</summary>
         public static bool? HuntOverride;
@@ -44,6 +49,7 @@ namespace Plunderspell.Raid
         private Vector3 _eyePoint;
         private readonly List<LootValue> _loot = new List<LootValue>();
         private readonly RaycastHit[] _hits = new RaycastHit[64];
+        private readonly RaycastHit[] _cutHits = new RaycastHit[64];
         private OphanState _shownState = OphanState.Absent;
         private PlayerStateMachine _shownTarget;
         private bool _shownBeaming, _shownSparing;
@@ -125,7 +131,7 @@ namespace Plunderspell.Raid
 
             bool hasTarget = _target != null && !_target.dead;
             Vector3 aim = hasTarget ? AimPoint(_target) : Eye;
-            bool inCover = hasTarget && StoneBetween(Eye, aim, out _);
+            bool inCover = hasTarget && StoneBetween(Eye, aim);
             LootValue artifact = hasTarget ? HeldArtifact(_target) : null;
 
             OphanStep step = _hunt.Tick(Time.deltaTime, hasTarget, inCover, artifact != null);
@@ -209,42 +215,26 @@ namespace Plunderspell.Raid
 
         private static Vector3 AimPoint(PlayerStateMachine body) => body.transform.position + Vector3.up * ChestAboveBody;
 
-        /// <summary>Whether castle stone lies on the line from its eye to the target.</summary>
-        private bool StoneBetween(Vector3 from, Vector3 to, out List<int> pieces, List<Vector3> entries = null)
+        private static bool IsStone(Collider hit) => hit != null && hit.GetComponentInParent<ProceduralCastleGenerator>() != null;
+
+        /// <summary>Whether castle stone lies on the line from its eye to the target (the per-frame cover check).</summary>
+        private bool StoneBetween(Vector3 from, Vector3 to)
         {
-            pieces = null;
             Vector3 line = to - from;
             int count = Physics.RaycastNonAlloc(from, line.normalized, _hits, line.magnitude, ~0, QueryTriggerInteraction.Ignore);
-            bool blocked = false;
             for (int i = 0; i < count; i++)
-            {
-                Collider hit = _hits[i].collider;
                 // Any part of the built castle is stone, room or not (towers, the keep, the curtain wall's dressing).
                 // A charged beam's hole is a gap in the collider itself, so nothing else is let through (#467).
-                if (hit.GetComponentInParent<ProceduralCastleGenerator>() == null)
-                    continue;
-                int piece = ScorchedRooms.PieceIndexOf(hit);
-                blocked = true;
-                entries?.Add(_hits[i].point);
-                if (piece >= 0)
-                    (pieces ??= new List<int>()).Add(piece);
-            }
-            return blocked;
+                if (IsStone(_hits[i].collider))
+                    return true;
+            return false;
         }
 
         private void FireCharged(Vector3 aim)
         {
-            // Where it enters the stone, and (cast back from the target) where it breaks out on the target's side.
-            var holes = new List<Vector3>();
-            StoneBetween(aim, Eye, out _, holes);
-            StoneBetween(Eye, aim, out List<int> pieces, holes);
-            var indices = new List<int>();
-            if (pieces != null)
-                foreach (int piece in pieces)
-                    if (!indices.Contains(piece))
-                        indices.Add(piece);
-            ShowCharged(Eye, aim, indices.ToArray(), holes.ToArray());
-            Debug.Log($"[Ophan] charged beam at {aim}; {indices.Count} piece(s) hit, {holes.Count} wall(s) burst.");
+            // Every machine casts the beam itself against its own copy of the castle: the host only says where it fired.
+            ShowCharged(Eye, aim);
+            Debug.Log($"[Ophan] charged beam from {Eye} at {aim}.");
         }
 
         private void Take(LootValue artifact)
@@ -304,33 +294,51 @@ namespace Plunderspell.Raid
                 RemoveLook();
         }
 
+        /// <summary>
+        /// The charged beam on every machine: one ray along the look finds where it first meets stone (the burst),
+        /// then one sphere cast of <see cref="CutRadius"/> along the same line decides what breaks.
+        /// </summary>
         [ObserversRpc]
-        private void ShowCharged(Vector3 eye, Vector3 at, int[] pieces, Vector3[] holes)
+        private void ShowCharged(Vector3 eye, Vector3 at)
         {
             if (_look != null)
                 _look.FlashCharged(at);
-            foreach (Vector3 hole in holes)
-                OphanWallBurst.At(hole, (at - eye).normalized);
-            // Stops 2 m short of the aim so the floor under the target is never broken.
-            Vector3 cutEnd = at - (at - eye).normalized * 2f;
+
+            Vector3 look = at - eye;
+            float length = look.magnitude;
+            if (length <= Mathf.Epsilon)
+                return;
+            Vector3 dir = look / length;
+
+            // 1. One ray along the look: the wall it bursts through first.
+            if (Physics.Raycast(eye, dir, out RaycastHit first, length, _stoneMask, QueryTriggerInteraction.Ignore)
+                && IsStone(first.collider))
+                OphanWallBurst.At(first.point, dir);
+
+            // 2. One sphere cast along the same line: everything inside the beam's radius breaks.
+            // Stops short of the aim so the floor under the target is never broken.
+            float reach = Mathf.Max(0f, length - CutStopShort);
+            Vector3 cutEnd = eye + dir * reach;
+            int count = Physics.SphereCastNonAlloc(eye, CutRadius, dir, _cutHits, reach, _stoneMask, QueryTriggerInteraction.Ignore);
+
             var cost = System.Diagnostics.Stopwatch.StartNew();
-            int parts = 0;
+            var broken = new HashSet<FracturableObject>();
             Bounds? brokenArea = null;
-            foreach (int index in pieces)
+            var scorched = new HashSet<CastleRoomModule>();
+            for (int i = 0; i < count; i++)
             {
-                Transform piece = ScorchedRooms.PieceAt(index);
-                if (piece == null)
+                Collider hit = _cutHits[i].collider;
+                if (!IsStone(hit))
                     continue;
-                // Debris lands on this piece's floor slab (piece height when it has no floor part).
-                Transform floor = piece.Find("Part_Floor");
-                float groundY = floor != null && floor.TryGetComponent(out Renderer floorRenderer)
-                    ? floorRenderer.bounds.max.y
-                    : piece.position.y;
-                foreach (FracturableObject part in piece.GetComponentsInChildren<FracturableObject>())
+
+                int index = ScorchedRooms.PieceIndexOf(hit);
+                Transform piece = index >= 0 ? ScorchedRooms.PieceAt(index) : null;
+
+                FracturableObject part = hit.GetComponentInParent<FracturableObject>();
+                if (part != null && broken.Add(part))
                 {
-                    part.groundY = groundY;
+                    part.groundY = GroundY(piece, part.transform);
                     part.HitAlongLine(eye, cutEnd, CutRadius, CutForce);
-                    parts++;
                     if (part.TryGetComponent(out Renderer partRenderer))
                     {
                         Bounds b = brokenArea ?? partRenderer.bounds;
@@ -338,22 +346,34 @@ namespace Plunderspell.Raid
                         brokenArea = b;
                     }
                 }
-                if (piece.TryGetComponent(out CastleRoomModule room))
+
+                if (piece != null && piece.TryGetComponent(out CastleRoomModule room) && scorched.Add(room))
                     ScorchedRooms.Scorch(room);
             }
+
             // One line per shot, so a freeze in a playtest can be read from the log (aj, 2026-10-29).
-            Debug.Log($"[Ophan] charged shot hit {parts} parts in {pieces.Length} pieces in {cost.Elapsed.TotalMilliseconds:F1} ms");
+            Debug.Log($"[Ophan] charged shot hit {broken.Count} parts of {count} hits in {cost.Elapsed.TotalMilliseconds:F1} ms");
             // Guards walk on the host's nav map; only the host updates it, once the broken colliders are in physics.
             // Only along the line inside what broke: from the eye, 900 m off, the map rescanned the whole castle each
-            // shot, 100-340 ms on the host (aj's freezes, 2026-10-29), and it ran even when nothing broke.
+            // shot, 100-340 ms on the host (aj's freezes, 2026-10-29).
             if (isServer && brokenArea.HasValue)
             {
                 Bounds area = brokenArea.Value;
                 area.Expand(NavRefreshRadius * 2f);
-                Vector3 dir = (cutEnd - eye).normalized;
                 Vector3 start = area.IntersectRay(new Ray(eye, dir), out float enter) ? eye + dir * enter : eye;
                 StartCoroutine(RefreshNavAfterBreak(start, cutEnd));
             }
+        }
+
+        /// <summary>Debris lands on the piece's floor slab (the piece's or part's height when it has no floor part).</summary>
+        private static float GroundY(Transform piece, Transform part)
+        {
+            if (piece == null)
+                return part.position.y;
+            Transform floor = piece.Find("Part_Floor");
+            return floor != null && floor.TryGetComponent(out Renderer floorRenderer)
+                ? floorRenderer.bounds.max.y
+                : piece.position.y;
         }
 
         // Two fixed updates, so a whole physics step has run since the colliders changed whichever side of the step

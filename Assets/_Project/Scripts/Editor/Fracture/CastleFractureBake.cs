@@ -88,7 +88,8 @@ namespace Plunderspell.EditorTools
                         if (!part.TryGetComponent(out FracturableObject fo)) fo = part.gameObject.AddComponent<FracturableObject>();
                         fo.fractureMesh = mesh;
                         fo.destroyWhenEmpty = false;
-                        fo.preInitialize = false;
+                        // Debris set up when the castle loads, not on the first hit: about 7 ms a wall mid-shot (aj, 2026-10-29).
+                        fo.preInitialize = true;
                         // The castle's own shader keeps drawing what is left; the fracture shader draws only the debris.
                         fo.keepMeshRenderer = true;
                         // The stone edges are baked into the mesh now, so no run-time caps (#477).
