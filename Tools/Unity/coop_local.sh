@@ -22,11 +22,12 @@ scene=Assets/_Project/Scenes/Bootstrap.unity
 gym_scene=Assets/_Project/Scenes/OphanGym.unity
 raid_override=""
 client=Build/DevTest
-scenes=()   # the main client builds the Build Settings scene list; the gym's builds Bootstrap, Lair and the gym
+scenes=()   # every client builds the Build Settings scene list, so its scene indices match the host's
 while [ $# -gt 0 ]; do
     case "$1" in
         --build) build=yes ;; --no-build) build=no ;;
-        --gym) raid_override=OphanGym; client=Build/OphanGym; scenes=(--scenes "[\"Assets/_Project/Scenes/Bootstrap.unity\",\"Assets/_Project/Scenes/Lair.unity\",\"$gym_scene\"]") ;;
+        # The whole build list, as the host has it: PurrNet tells a client which scene to load by its build index.
+        --gym) raid_override=OphanGym; client=Build/OphanGym ;;
         *) echo "unknown option $1"; exit 1 ;;
     esac
     shift

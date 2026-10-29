@@ -1,21 +1,21 @@
 # Scene flow: Bootstrap, Lair and Raid
 
-**Status: built for solo play, co-op not yet checked (2026-10-29, #536).** `SceneSplitTool` split RaidScene into
-`Bootstrap.unity`, `Lair.unity` and `RaidScene.unity`, first in the build in that order. `SceneFlow` (Bootstrap) loads
-the Lair and raid scenes on the host when the server starts, and unloads and reloads the raid scene each time a raid
-ends. Checked solo in the Editor: menu (Bootstrap only), Lair (player at 1005, 1.2, 1.5), set out (63 rooms), return
-(raid scene reloaded, 0 rooms, 0 fracture parts or effects), set out again (63 rooms). Two changes from the plan: the
-campaign manager `LairHubManager` lives in Bootstrap with the raid director (it is data and saves, no room), and the
-Lair and Market rooms keep their 1000 m and 1100 m offsets and stay loaded during a raid, so the two scenes never
-overlap and the Lair is not reloaded each trip. The Ophan Gym and the co-op scripts still use the old combined scene
-(#542).
+**Status: built, co-op checked (2026-10-29, #536).** `SceneSplitTool` split RaidScene into `Bootstrap.unity`,
+`Lair.unity` and `RaidScene.unity`, first in the build in that order; the Ophan Gym (`OphanGym.unity`) is a raid scene
+of its own, rebuilt from RaidScene and loaded in its place when the co-op launcher sets SceneFlow's override. `SceneFlow`
+(Bootstrap) keeps exactly one of the Lair and the raid scene loaded (Decisions, "One scene at a time, behind a loading
+screen"): setting out unloads the Lair and loads a fresh raid scene, a raid ending unloads it and loads the Lair. Each
+machine keeps its loading screen up until its own castle is built or it is in the Lair. Co-op run `split-2` (Editor
+host, built client): both machines built the same castle (63 rooms, 246 breakable parts), and after the return both
+had 0 rooms, 0 parts and 0 debris effects. `LairHubManager` (campaign data and saves) lives in Bootstrap with the raid
+director. A client is built from the whole build list, because PurrNet names scenes by build index.
 
 ## The three scenes
 
 | Scene | Loaded | Holds |
 |---|---|---|
 | `Bootstrap.unity` | First, never unloaded | Network manager, game state, event manager, the players |
-| `Lair.unity` | On top of Bootstrap while players are home | Lair room and Market yard at the origin, their doors, the portal, ledger, century dial, strongbox, market counters, haul landing |
+| `Lair.unity` | On top of Bootstrap while players are home | Lair room and Market yard 1000 m and 1100 m out, their doors, the portal, ledger, century dial, strongbox, market counters, haul landing |
 | `RaidScene.unity` | On top of Bootstrap during a raid | Castle generator, loot and guard spawners, the Ophan, extraction |
 
 Both machines change scenes together through PurrNet's scene module

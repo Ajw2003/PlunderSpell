@@ -200,8 +200,12 @@ namespace Plunderspell.Raid
         /// </summary>
         private void Update()
         {
-            if (isSpawned && !isServer && _phase.value == RaidPhase.Raiding && NeedsClientBuild(Seed))
+            // Only once this machine's raid scene has loaded: the phase can arrive first since the split (#549).
+            if (isSpawned && !isServer && _phase.value == RaidPhase.Raiding && NeedsClientBuild(Seed) && RaidSceneContents.Current != null)
+            {
+                BindRaidScene();
                 BuildCastle(Seed);
+            }
 
             // The Lair's ledger shows tonight's shares, so the host keeps the seats present up to date between raids.
             if ((!isSpawned || isServer) && _phase.value == RaidPhase.InLair && Time.unscaledTime >= _nextSeatCheck)
