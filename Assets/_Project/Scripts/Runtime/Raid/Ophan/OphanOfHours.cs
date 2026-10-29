@@ -50,6 +50,7 @@ namespace Plunderspell.Raid
         private float _repickIn;
         private Vector3 _eyePoint;
         private readonly List<LootValue> _loot = new List<LootValue>();
+        private readonly List<(LootValue piece, Item item)> _artifacts = new List<(LootValue, Item)>();
         private readonly RaycastHit[] _hits = new RaycastHit[64];
         private readonly RaycastHit[] _cutHits = new RaycastHit[64];
         private OphanState _shownState = OphanState.Absent;
@@ -176,6 +177,11 @@ namespace Plunderspell.Raid
             // Loot spawned or dropped since it arrived (a torn page, a piece out of a chest) counts too.
             _loot.Clear();
             _loot.AddRange(FindObjectsByType<LootValue>(FindObjectsSortMode.None));
+            // The artifacts with their Item, once a second here rather than looked up for every piece every frame (audit P1, #526).
+            _artifacts.Clear();
+            foreach (LootValue piece in _loot)
+                if (piece != null && piece.Item != null && piece.Item.IsArtifact && piece.TryGetComponent(out Item item))
+                    _artifacts.Add((piece, item));
             var players = new List<OphanCandidate<PlayerStateMachine>>();
             foreach (PlayerStateMachine body in FindObjectsByType<PlayerStateMachine>(FindObjectsSortMode.InstanceID))
                 players.Add(new OphanCandidate<PlayerStateMachine>(body, WorthCarried(body), !body.dead));
@@ -194,16 +200,17 @@ namespace Plunderspell.Raid
 
         private LootValue HeldArtifact(PlayerStateMachine body)
         {
-            foreach (LootValue piece in _loot)
-                if (piece != null && piece.Item != null && piece.Item.IsArtifact && Holds(body, piece))
+            foreach ((LootValue piece, Item item) in _artifacts)
+                if (piece != null && item != null && Holds(body, item))
                     return piece;
             return null;
         }
 
-        private static bool Holds(PlayerStateMachine body, LootValue piece)
+        private static bool Holds(PlayerStateMachine body, LootValue piece) =>
+            piece != null && piece.TryGetComponent(out Item item) && Holds(body, item);
+
+        private static bool Holds(PlayerStateMachine body, Item item)
         {
-            if (piece == null || !piece.TryGetComponent(out Item item))
-                return false;
             var identity = body.GetComponent<NetworkIdentity>();
             int key = identity != null && identity.owner.HasValue ? LootPickup.HolderKey(identity.owner.Value) : int.MinValue;
             return item.IsHeldBy(body.gameObject, key);
@@ -363,7 +370,7 @@ namespace Plunderspell.Raid
                 Bounds area = brokenArea.Value;
                 area.Expand(NavRefreshRadius * 2f);
                 Vector3 start = area.IntersectRay(new Ray(eye, dir), out float enter) ? eye + dir * enter : eye;
-                StartCoroutine(RefreshNavAfterBreak(start, cutEnd));
+                StartCoroutine(RefreshNavAfterBreak(start, cutEnd, broken));
             }
         }
 
@@ -380,8 +387,12 @@ namespace Plunderspell.Raid
 
         // Two fixed updates, so a whole physics step has run since the colliders changed whichever side of the step
         // WaitForFixedUpdate resumes on; the map's casts then see the holes.
-        private IEnumerator RefreshNavAfterBreak(Vector3 from, Vector3 to)
+        private IEnumerator RefreshNavAfterBreak(Vector3 from, Vector3 to, HashSet<FracturableObject> broken)
         {
+            // The broken colliders cook off the main thread (#525): the map waits for the new shapes.
+            foreach (FracturableObject part in broken)
+                while (part != null && part.IsCooking)
+                    yield return null;
             yield return new WaitForFixedUpdate();
             yield return new WaitForFixedUpdate();
             ProceduralCastleGenerator generator = FindFirstObjectByType<ProceduralCastleGenerator>();

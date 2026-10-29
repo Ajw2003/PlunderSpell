@@ -1,5 +1,6 @@
 // Ported from ufo-3-rag-dahl FractureSystem (aj); see docs/plans/ophan-redo-plan.html.
 using UnityEngine;
+using Unity.Jobs;
 using System.Collections.Generic;
 
 namespace Plunderspell.Fracture
@@ -70,6 +71,9 @@ namespace Plunderspell.Fracture
         private FractureEffect[] activeEffects;
         private MeshCollider meshCollider;
         private Mesh collisionMesh;
+        private Mesh spareCollisionMesh;
+        private Unity.Jobs.JobHandle cookJob;
+        private bool cooking;
         private int[] collisionTriangles;
         private Vector3[] collisionVertices;
         private int initialTriangleCount;
@@ -157,6 +161,10 @@ namespace Plunderspell.Fracture
             if (preInitialize && activeEffects == null)
             {
                 activeEffects = FractureEngine.Fracture(this);
+                // The copies a first break makes, made now: they cost the first charged shot several ms (aj's frame
+                // pacing, #525). Memory over hitches.
+                if (keepMeshRenderer) EnsureRenderMesh();
+                if (collisionMesh != null && spareCollisionMesh == null) spareCollisionMesh = Instantiate(collisionMesh);
             }
         }
 
@@ -582,10 +590,12 @@ namespace Plunderspell.Fracture
                         }
                     }
                     // Clean up dynamically created mesh to prevent memory leaks
+                    if (cooking) { cookJob.Complete(); cooking = false; }
                     if (collisionMesh != null)
                     {
                         Destroy(collisionMesh);
                     }
+                    if (spareCollisionMesh != null) Destroy(spareCollisionMesh);
                     // Clean up the main object
                     if (destroyWhenEmpty) Destroy(gameObject);
                     else meshCollider.sharedMesh = null; // collider must not keep the destroyed mesh
@@ -596,13 +606,72 @@ namespace Plunderspell.Fracture
                 System.Array.Copy(newTrianglesBuffer, finalTriangles, newTriangleCount);
                 collisionTriangles = finalTriangles;
                 
-                collisionMesh.triangles = collisionTriangles;
                 if (keepMeshRenderer) UpdateRenderMesh();
-                
-                // Force PhysX to rebuild the collision mesh by clearing it first
-                meshCollider.sharedMesh = null;
-                meshCollider.sharedMesh = collisionMesh;
+                CookOffMainThread(collisionTriangles);
             }
+        }
+
+        private struct CookJob : IJob
+        {
+            public int meshId;
+            public MeshColliderCookingOptions options;
+            public void Execute() => Physics.BakeMesh(meshId, false, options);
+        }
+
+        // The collider's new shape is cooked on a worker into a second mesh and swapped in when ready, a frame or two
+        // later: cooking it on the main thread cost about 2-5 ms per part at every break (aj's frame pacing, #525).
+        private void CookOffMainThread(int[] triangles)
+        {
+            if (cooking)
+            {
+                // shortcut: a second break while one cooks waits for it here; fine at the charged shot's pace.
+                cookJob.Complete();
+                FinishCook();
+            }
+            if (spareCollisionMesh == null) spareCollisionMesh = Instantiate(collisionMesh);
+            spareCollisionMesh.triangles = triangles;
+            cookJob = new CookJob { meshId = spareCollisionMesh.GetInstanceID(), options = meshCollider.cookingOptions }.Schedule();
+            cooking = true;
+            if (Application.isPlaying) StartCoroutine(SwapWhenCooked());
+            else { cookJob.Complete(); FinishCook(); }
+        }
+
+        private System.Collections.IEnumerator SwapWhenCooked()
+        {
+            while (cooking && !cookJob.IsCompleted) yield return null;
+            if (cooking) FinishCook();
+        }
+
+        /// <summary>True while a break's new collider is still cooking; the old shape stands until it is swapped in.</summary>
+        public bool IsCooking => cooking;
+
+        private void FinishCook()
+        {
+            cookJob.Complete();
+            cooking = false;
+            meshCollider.sharedMesh = spareCollisionMesh; // already cooked with the collider's options, so not cooked again
+            (collisionMesh, spareCollisionMesh) = (spareCollisionMesh, collisionMesh);
+        }
+
+        // This part's own copy of its drawn mesh, which breaks then edit; false when it has none.
+        private bool EnsureRenderMesh()
+        {
+            if (renderMesh != null) return true;
+            var filter = GetComponent<MeshFilter>();
+            // Seen once on a co-op client (2026-10-28, cause not found yet): the throw stopped every later part's break.
+            if (filter == null || filter.sharedMesh == null)
+            {
+                Debug.LogError($"[Fracture] {transform.parent?.name}/{name} has no mesh to redraw after a break; its collider still breaks.", this);
+                return false;
+            }
+            renderMesh = Instantiate(filter.sharedMesh);
+            filter.sharedMesh = renderMesh;
+            if (capDepthMetres > 0f)
+            {
+                renderMesh.GetVertices(baseVerts); renderMesh.GetNormals(baseNormals); renderMesh.GetUVs(0, baseUvs);
+                renderMesh.GetUVs(1, baseUv2); renderMesh.GetTangents(baseTangents); renderMesh.GetColors(baseColors);
+            }
+            return true;
         }
 
         // The renderer keeps its materials, so the surviving triangles go back into their own submeshes (#472).
@@ -610,22 +679,7 @@ namespace Plunderspell.Fracture
         {
             var filter = GetComponent<MeshFilter>();
             if (filter == null || pieceMappings == null) return;
-            if (renderMesh == null)
-            {
-                // Seen once on a co-op client (2026-10-28, cause not found yet): the throw stopped every later part's break.
-                if (filter.sharedMesh == null)
-                {
-                    Debug.LogError($"[Fracture] {transform.parent?.name}/{name} has no mesh to redraw after a break; its collider still breaks.", this);
-                    return;
-                }
-                renderMesh = Instantiate(filter.sharedMesh);
-                filter.sharedMesh = renderMesh;
-                if (capDepthMetres > 0f)
-                {
-                    renderMesh.GetVertices(baseVerts); renderMesh.GetNormals(baseNormals); renderMesh.GetUVs(0, baseUvs);
-                    renderMesh.GetUVs(1, baseUv2); renderMesh.GetTangents(baseTangents); renderMesh.GetColors(baseColors);
-                }
-            }
+            if (!EnsureRenderMesh()) return;
             var lists = new List<int>[renderMesh.subMeshCount];
             for (int s = 0; s < lists.Length; s++) lists[s] = new List<int>();
             for (int i = 0; i < initialTriangleCount; i++)

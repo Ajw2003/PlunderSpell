@@ -16,6 +16,20 @@ namespace Plunderspell.Raid
 
         public static int Count => s_scorched.Count;
 
+        // The generated castle's room container, found once per castle: each charged shot looked it up with
+        // FindFirstObjectByType for every hit, up to 128 times (audit P3, #526). Unity's null check drops a destroyed one.
+        private static Transform s_container;
+
+        private static Transform Container()
+        {
+            if (s_container == null)
+            {
+                var any = Object.FindFirstObjectByType<CastleRoomModule>();
+                s_container = any != null ? any.transform.parent : null;
+            }
+            return s_container;
+        }
+
         /// <summary>The room a collider belongs to, or null for anything that is not a castle room.</summary>
         public static CastleRoomModule RoomOf(Collider collider) =>
             collider != null ? collider.GetComponentInParent<CastleRoomModule>() : null;
@@ -27,8 +41,7 @@ namespace Plunderspell.Raid
         /// <summary>Finds the room at <paramref name="index"/> under the generated castle on this machine.</summary>
         public static CastleRoomModule RoomAt(int index)
         {
-            var any = Object.FindFirstObjectByType<CastleRoomModule>();
-            Transform container = any != null ? any.transform.parent : null;
+            Transform container = Container();
             if (container == null || index < 0 || index >= container.childCount)
                 return null;
             return container.GetChild(index).GetComponent<CastleRoomModule>();
@@ -38,8 +51,7 @@ namespace Plunderspell.Raid
         /// container; -1 when it is not under the container.</summary>
         public static int PieceIndexOf(Collider collider)
         {
-            var any = Object.FindFirstObjectByType<CastleRoomModule>();
-            Transform container = any != null ? any.transform.parent : null;
+            Transform container = Container();
             if (container == null || collider == null)
                 return -1;
             for (Transform t = collider.transform; t != null; t = t.parent)
@@ -51,8 +63,7 @@ namespace Plunderspell.Raid
         /// <summary>The castle piece at <paramref name="index"/> under the room container, or null.</summary>
         public static Transform PieceAt(int index)
         {
-            var any = Object.FindFirstObjectByType<CastleRoomModule>();
-            Transform container = any != null ? any.transform.parent : null;
+            Transform container = Container();
             return container == null || index < 0 || index >= container.childCount ? null : container.GetChild(index);
         }
 
@@ -64,6 +75,10 @@ namespace Plunderspell.Raid
                 s_scorched.Add(room);
         }
 
-        public static void Clear() => s_scorched.Clear();
+        public static void Clear()
+        {
+            s_scorched.Clear();
+            s_container = null;
+        }
     }
 }
