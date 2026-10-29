@@ -269,7 +269,8 @@ switch (action)
             bool artifact = lootItem != null && (bool)Get(lootItem, "IsArtifact");
             var item = value.GetComponent(T("Item"));
             var rb = value.GetComponent<UnityEngine.Rigidbody>();
-            if (item == null || rb == null || artifact != wantArtifact || rb.mass > 12f) continue;
+            // Under 12 kg: the 12 kg tripod cauldron fell from the host's grip when it was moved into cover (2026-10-29).
+            if (item == null || rb == null || artifact != wantArtifact || rb.mass >= 12f) continue;
             float worth = (float)Get(value, "Worth");
             // In the Ophan Gym the race artifact under the pillar is the one to take.
             if (value.GetComponent("OphanGymBeacon") != null) worth = float.MaxValue;
