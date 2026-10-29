@@ -219,3 +219,12 @@ tuned. The debt stays one total (`LairHubManager.TotalDebt`, still growing 50 pe
 Solo Play, 2026-10-07: `Tools/Unity/eval/market_spawn_piece.cs` puts a golden goblet on a counter,
 `SellCounter.Answer` drives it; captures in `docs/generated/market-haggle-2026-10-07/`. The 1/2/3 key
 path is not machine-checked: legacy `Input` cannot be injected from the Editor tools.
+
+
+## Wealth is loot (planned, 2026-10-29)
+
+Approved 2026-10-29 (Decisions, "Design approved: no debt, no purses; wealth is loot"); not built. A sale will pay out
+in wealth pieces in three sizes (small coins, a medium gem, a large gold bar), carried like any loot, put on the haul
+pile and saved with it, instead of the coin pouch described above. Wealth pieces never open a haggle at a counter.
+Debt, purses, the Collector and the strongboxes are removed, and the ledger book shows only the Ophan's demand. Until
+then, the coin pouch, strongbox and Collector sections above describe the game as it is.

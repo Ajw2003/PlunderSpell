@@ -3,6 +3,20 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-29 — Design approved: no debt, no purses; wealth is loot
+
+**Status.** Decided by the owner: "Design approved: no debt 1* 2A 3A" (plan page `docs/plans/no-debt-no-purses.html`),
+with their own answer to choice 1.
+
+**Decision.** Debt, each seat's purse, the Collector (`CollectorRules`) and banking into strongboxes are removed. 1, the
+owner's answer: "Coins that are loot, or gems, or gold bars, we need small medium and large denominations that are
+carriable like any other and go onto the haul pile". A sale pays out in those pieces instead of a coin pouch. 2A: the
+strongboxes are removed. 3A: the ledger book shows only the Ophan's demand. This supersedes the debt and purse parts of
+the #313 Market and Collector work.
+
+**Why.** Nothing in the game spends money, and the owner wants wealth kept in the Lair with the rest of the loot
+(2026-10-29).
+
 ## 2026-10-29 — Design approved: the Lair and the Market in their own scene
 
 **Status.** Decided by the owner: "Design approved: lair scene split 1A 2A 3A" (plan page
