@@ -115,3 +115,6 @@ Tools/Headless/**/obj/
 # Profiler captures from Tools/Unity/perf_capture.sh: ~0.5-1 GB each, over GitHub's 100 MB file limit.
 # The summaries (*-report.txt) next to them are committed.
 docs/generated/perf-*/*.raw
+
+# Doom spell prototype: per-frame JPEGs capture.js rewrites on every video run; fatum_cast.mp4 holds them.
+docs/plans/doom-spell/frames/

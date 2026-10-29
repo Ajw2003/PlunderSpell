@@ -1,0 +1,94 @@
+{
+  "title": "Fatum: the Doom spell",
+  "eyebrow": "Design for approval · prototype built, no game code yet",
+  "approval": "Design approved: Fatum",
+  "short": {
+    "lead": "Fatum is a boss-only, end-game spell and an homage to Doom in Mage Arena. A small red-black orb rises over the boss, tears open into a red black hole that drags everything toward it for 9 seconds, swallows the light and the sound, then collapses onto the boss. The prototype below is a 21-second animation with its own sound; nothing has been added to the game yet.",
+    "hint": "Tap a step to see what it gives you and what it needs from you.",
+    "key": [["Built for this proposal", ""], ["Yours to decide", "you"]],
+    "items": [
+      ["eye", "Watch", "Watch the cast with sound", "",
+       "fatum_cast.mp4 in docs/plans/doom-spell/: the whole cast, 21 seconds, 960×540, with the sound mixed in. The moving picture here is the same animation without sound.",
+       "Open the video with sound on. Headphones help: most of the dread is below 60 Hz.",
+       {"src": "docs/plans/doom-spell/fatum_cast.gif", "alt": "Animated loop of the whole Fatum cast: incantation, rising orb, black hole, inhale and detonation", "caption": "The whole cast, silent. The video has the sound."}],
+      ["flask", "Sound", "The sound of impending doom", "",
+       "doom_spell_full.ogg, 21 seconds. A funeral bell (Kenney's CC0 heavy bell, pitched two octaves down) tolls at each stage. Under it: a drone, a heartbeat that speeds up, a tone that keeps falling forever, and chains dragged in. Then near-silence, the blast, and a last toll ringing out.",
+       "Nothing. It is built by compose_sound.py from CC0 recordings already in the repo, so it can be rebuilt and changed.",
+       {"src": "docs/plans/doom-spell/doom_spell_spectrogram.png", "alt": "Waveform and spectrogram of the Doom sound with the five phases marked", "caption": "Loudness builds from about -34 dB to -17 dB, falls to -42 dB in the silence, then hits -6 dB at the blast."}],
+      ["search", "Reuses", "What it reuses, and what is missing", "",
+       "It plugs into the spell pipeline that already exists: a new SpellId, one ISpellEffect class, one registry line, and a new look for SpellVfxDirector. Damage goes through Damage.Apply like every other hit, so the numbers, flashes and blame already work. The pull reuses the force code Levo and Velox use.",
+       "Nothing is marked as a boss in the game yet. The Gilded Colossus is roadmap item #43 (\"The Gilded Colossus as a real vault boss\"). The spell needs a small \"this is a boss\" marker, which that work would also use."],
+      ["hand", "Decide", "Pick the five design answers", "you",
+       "Your picks decide the word, the rules, the damage, the danger to your team, and how the spell is found.",
+       "Choose an option for each question under Choices, then copy your reply."],
+      ["lock", "Approve", "Approve, then I build it", "you",
+       "After approval I file the GitHub issues and build it in Unity, with tests, a Combat Bench check and screenshots for you to QA.",
+       "Type \"Design approved: Fatum\" with your picks, or tell me what to change."]
+    ]
+  },
+  "changes": [
+    ["new", "1. Incantation (0–3 s)", "The caster says the word; their hands blacken and every torch leans toward them.", null,
+     "One funeral toll. A low drone rises out of the floor. The torches in the room bend toward the caster as if the air were being pulled in.",
+     ["No spell takes longer than an instant to cast.", "A 3-second wind-up that everyone can see and hear.", "The boss and your team get a warning that it is coming."],
+     null,
+     {"src": "docs/plans/doom-spell/stills/1-incantation.png", "alt": "The caster speaking FATUM with red-black light at their hands, the Gilded Colossus across the hall", "caption": "Incantation at 1.6 s."}],
+    ["new", "2. The Omen rises (3–5 s)", "A small red-black orb leaves the hands and drifts up over the boss.", null,
+     "The second toll. A heartbeat starts. This is the Mage Arena orb: small, red and black, floating upward before it opens. Everyone has 2 seconds to get clear.",
+     ["Nothing.", "A slow, visible orb with a smoky trail.", "You see exactly where the hole will open."],
+     null,
+     {"src": "docs/plans/doom-spell/stills/2-omen-rises.png", "alt": "The small red-black orb arcing up toward the boss, trailing red smoke", "caption": "The orb at 4.2 s."}],
+    ["new", "3. The Maw opens (5–14 s)", "A red black hole above the boss pulls everything in and crushes it.", null,
+     "The lowest toll and a boom. A black disc ringed in red light, with a glowing disk around it and light bending around its edge. Loot, guards and anyone standing on the ground are dragged toward it. The boss is lifted, stretched and cracked, taking damage on every heartbeat. Torches turn red. As in Mage Arena, a player who touches the centre dies, and getting off the ground (Saltus, Levo) is the way out.",
+     ["Nothing pulls things toward a point.", "A 9-second pull and crush, the boss's damage ticking on the heartbeat.", "A huge payoff, and a real risk to anyone careless."],
+     null,
+     {"src": "docs/plans/doom-spell/stills/3-maw-opens.png", "alt": "A red black hole with a glowing disk swallowing the boss's head while coins spiral in", "caption": "The black hole at 9.5 s; the boss's bar drains on each heartbeat."}],
+    ["new", "4. The Inhale (14–15.4 s)", "It swallows the light, the torches and the sound.", null,
+     "The hole shrinks to a single red point. The torches go out, the room goes black, and the sound is pulled into near-silence for half a second.",
+     ["Nothing.", "Half a second of dark and quiet.", "The silence is the scariest moment, so the blast lands harder."],
+     null,
+     {"src": "docs/plans/doom-spell/stills/4-inhale.png", "alt": "The room nearly black, the boss stretched upward toward a shrinking red point", "caption": "The inhale at 14.75 s."}],
+    ["new", "5. Doom (15.4 s onward)", "The hole collapses onto the boss.", null,
+     "A white-red flash, a shockwave that bends the room as it passes, gold shards and embers, and the boss toppling in pieces. The final bell rings out over an empty, dark hall.",
+     ["Nothing.", "The finishing blow and a lasting aftermath.", "It feels like the end of the fight, because it is meant to be."],
+     null,
+     {"before": {"src": "docs/plans/doom-spell/stills/5-doom.png", "alt": "The detonation flash and shockwave ring over the shattering boss"}, "after": {"src": "docs/plans/doom-spell/stills/6-aftermath.png", "alt": "The broken boss toppling in a dark hall, health bar empty, DOOMED"}, "caption": "The blast at 15.6 s and the aftermath at 18 s."}],
+    ["new", "Prototype files", "Everything that made this page is in docs/plans/doom-spell/.", null,
+     "prototype.js draws the scene with one WebGL shader. capture.js records it in headless Chromium: \"node docs/plans/doom-spell/capture.js stills\" or \"... video 24\". compose_sound.py builds the sound. The stills, the GIF and the MP4 are committed with them.",
+     ["Nothing.", "A prototype that can be re-recorded after any change.", "The look and the sound can be tuned before any game code exists."],
+     null]
+  ],
+  "choices": [
+    ["word", "What do players say to cast it?", [
+      ["A", "Fatum", 1, "Latin for fate or doom, so it fits the Latin-ish word list (Ignis, Frango, Somnus). Two clear syllables are easy for the voice recogniser."],
+      ["B", "Exitium", 0, "Latin for ruin or destruction. Three syllables is a harder word to say under pressure."],
+      ["C", "Doom", 0, "The word Mage Arena uses, so the homage is direct. It is the only English word in the spell list."]
+     ], "The word list is Latin; Fatum keeps the homage in its meaning without breaking that."],
+    ["rule", "What makes it a boss-only spell?", [
+      ["A", "It fizzles unless a boss is in range", 1, "The word is spent, a bell tolls, and nothing opens. It can never be used to clear a room of guards."],
+      ["B", "It works anywhere, but only bosses take its damage", 0, "The pull still drags loot and guards, so it doubles as a powerful room tool."],
+      ["C", "It only works inside a boss arena", 0, "The simplest rule, but it needs arenas, which do not exist yet (#43)."]
+     ], "A keeps it special and stops it from replacing every other spell."],
+    ["power", "How devastating is it?", [
+      ["A", "A finisher", 1, "The hole crushes about a third of the boss's health; if the boss is low enough when it collapses, the boss dies. This is what the prototype shows."],
+      ["B", "A fixed big hit", 0, "Always takes about 60% of the boss's health and never kills by itself."],
+      ["C", "Instant kill", 0, "Pure Mage Arena: anything caught at the centre dies. It ends every boss fight the moment it is cast."]
+     ], "A is devastating without making the rest of the fight pointless."],
+    ["danger", "What does it do to your own team?", [
+      ["A", "Pulls them in; the centre kills", 1, "Faithful to Mage Arena: anyone on the ground is dragged toward it, and getting off the ground (Saltus, Levo) is the escape."],
+      ["B", "Pulls them in, never kills", 0, "Players are still dragged and must still fight it, but cannot die from it."],
+      ["C", "Ignores players", 0, "Safest for the team, and loses most of the impending doom."]
+     ], "The risk to your own team is what gives Doom its dread."],
+    ["source", "How do players get it?", [
+      ["A", "A torn page in a late-Age vault, once per raid", 1, "An homage to Mage Arena's torn pages. It is found only deep in a late castle, and it burns out after one cast each raid."],
+      ["B", "Unlocked in the Lair after a first boss kill", 0, "Always available from then on, still limited to one cast per raid."],
+      ["C", "Always known", 0, "Simplest, but it is no longer an end-game reward."]
+     ], "A makes finding it a moment in itself."]
+  ],
+  "wrapup": {
+    "summary": "A boss-only Doom spell, prototyped as a 21-second animation with its own sound; no game code yet.",
+    "changing": "Nothing in the game changes until you approve. The prototype, the sound, its build scripts and this page are added in docs/plans/doom-spell/, and docs/page-style.json is drafted from the design system.",
+    "blocking": "Your five picks and your approval.",
+    "next": "I file a parent GitHub issue with one child issue per step, then build Fatum in Unity: a boss marker, the spell and its misfire, its visual effect, the sound in AudioForge, tests, and a Combat Bench run with screenshots for you to QA.",
+    "todo": ["Watch fatum_cast.mp4 with sound on.", "Pick your answers (Choices).", "Tap <b>Copy my reply</b>.", "Send it with \"Design approved: Fatum\", or tell me what to change."]
+  }
+}

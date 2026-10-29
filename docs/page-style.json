@@ -1,0 +1,47 @@
+{
+  "name": "PlunderSpell",
+  "drafted_from": "docs/generated/design-system/project/tokens.json",
+  "themes": [
+    "dark"
+  ],
+  "colors": {
+    "background": "#14120E",
+    "surface": "#1E1A14",
+    "text": "#DCD2BA",
+    "text_muted": "#9A9078",
+    "line": "#332D22"
+  },
+  "roles": {
+    "you_act": {
+      "color": "#5FA288",
+      "why": "drafted from token 'verdigris'; aj to confirm"
+    },
+    "blocking": {
+      "color": "#C4542E",
+      "why": "drafted from token 'madder'; aj to confirm"
+    },
+    "accent": {
+      "color": "#7A6AA0",
+      "why": "drafted from token 'lapis'; aj to confirm"
+    },
+    "done": {
+      "color": "#9A9078",
+      "why": "drafted from token 'vellum-dim'; aj to confirm"
+    }
+  },
+  "reserved": [
+    {
+      "color": "#C9A227",
+      "rule": "its usage note keeps it for one meaning; aj to confirm"
+    }
+  ],
+  "fonts": {
+    "display": "Eczar",
+    "body": "Spectral",
+    "label": "Overpass Mono"
+  },
+  "shape": {
+    "corner_radius": 0
+  },
+  "pictures": "optional"
+}

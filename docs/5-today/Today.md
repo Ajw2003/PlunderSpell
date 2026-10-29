@@ -1,5 +1,25 @@
 # Today
 
+**2026-10-29 - Fatum, a boss-only Doom spell, prototyped for approval; no game code yet.** The owner
+asked for an end-game spell for boss fights, as an homage to Doom in Mage Arena: a red-black orb that rises
+and opens into a red black hole. Its behaviour, from the Mage Arena wiki: it pulls grounded players, and its
+centre kills. Everything is in `docs/plans/doom-spell/`:
+
+- `fatum_cast.mp4` is a 21-second recording with sound, and `fatum_cast.gif` the same without sound.
+- `stills/` holds one picture per phase.
+- `prototype.js` is the WebGL scene, and `capture.js` records it in headless Chromium.
+- `compose_sound.py` builds the sound from Kenney and OpenGameArt CC0 recordings already in
+  `Tools/AudioForge/library/`, plus synthesis.
+
+The proposal page is `docs/plans/fatum-doom-spell.html`. It waits on five design picks: the word, the
+boss-only rule, the damage, the danger to players, and how the spell is found. It also notes that nothing is
+marked as a boss in code yet (#43). Not done: the sound was measured (loudness per half second, spectrogram)
+but not listened to, because this session had no audio output. External sites were blocked here, so no new
+recordings were downloaded. `docs/page-style.json` was drafted from the design-system tokens, at the owner's
+choice.
+
+---
+
 **2026-10-02 (evening) - guards move again: the walk map was empty for two of the three Ages.** The owner
 saw guards stuck and standing still in co-op. Measured with `Tools/Unity/coop_guard_check.sh` (Late
 Medieval, seed 3508293): every guard stood still for the whole 90 s. Cause: `CastleNavTileBaker` baked only
