@@ -55,6 +55,12 @@ namespace Plunderspell.Fracture
             
             computeShader.SetBuffer(kernelID, "_Pieces", pieceBuffer);
             computeShader.SetBuffer(kernelImpactID, "_Pieces", pieceBuffer);
+
+            // A first dispatch at load, far from every piece, so the kernel is ready before the first real hit (aj's
+            // hitches, 2026-10-29). It moves nothing.
+            computeShader.SetVector("_ImpactPoint", new Vector3(1e7f, 1e7f, 1e7f));
+            computeShader.SetFloat("_ImpactRadius", 0f);
+            computeShader.Dispatch(kernelImpactID, Mathf.CeilToInt(pieceCount / 64f), 1, 1);
         }
 
         public void DropPieces(int[] pieceIndices)
