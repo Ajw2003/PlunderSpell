@@ -63,7 +63,12 @@ Still outside it, each needing a keep-or-drop call:
   the castle now clears at once (it stayed loaded until the next raid set out) and debris effects are
   children of their part: co-op run `cost-15` counted 63 rooms, 214 parts and 434 debris effects
   before, and 0 of each on both machines after. Plan for the Lair and Market in their own scene:
-  `docs/plans/lair-scene-split.html`, waiting on aj. #494 (the recorded QA run) not done.
+  `docs/plans/lair-scene-split.html`, waiting on aj. The Ophan's numbers now live in one asset,
+  `Assets/_Project/Resources/OphanTuning.asset` (#527 D2): both scenes had kept their own copy, so code changes
+  never reached the game (the charged beam stayed at 100000 damage). It holds aj's values of 2026-10-29: lock-on
+  2 s, slow beam 10 a second, second shot 4 s after the first, charged hit 25, plus the beam's radius, force and
+  stop-short. Co-op run `d2-4`: charges and breaks as before, the host is worn down rather than one-shot, and the
+  Lair return leaves 0 of the raid on both machines. #494 (the recorded QA run) not done.
 - `AjsAgent/fear-pass-handoff` (2026-10-12, #386): the fear pass's approved designs, and the art
   for the Wick (model and nine clips, #406) and the Ophan of Hours (model and five clips, #411,
   #412), with `staging-2026-10-11` merged in, and the import rules for all four fear files (#413),
