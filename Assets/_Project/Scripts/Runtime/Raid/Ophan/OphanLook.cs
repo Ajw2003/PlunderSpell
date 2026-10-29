@@ -47,7 +47,9 @@ namespace Plunderspell.Raid
         private float _greatAngle, _innerAngle, _tiltAngle, _spin;
         private Renderer[] _renderers;
         private MaterialPropertyBlock _block;
+        private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
         private Color _baseEmission;
+        private float _lastGlow = float.NaN; // NaN never equals a glow, so the first call writes
         private OphanBeamShaft _beam, _core;
         private Vector3 _flashTarget;
         private float _flashUntil = float.NegativeInfinity;
@@ -269,10 +271,14 @@ namespace Plunderspell.Raid
                 glow = 2.5f;
             }
             _eyePose.Set(EyeTurn(), eyeScale, turnFirst: true);
+            // Skip the per-renderer block writes while the glow is unchanged (audit P9).
+            if (glow == _lastGlow)
+                return;
+            _lastGlow = glow;
             foreach (Renderer r in _renderers)
             {
                 r.GetPropertyBlock(_block);
-                _block.SetColor("_EmissionColor", _baseEmission * glow);
+                _block.SetColor(EmissionColorId, _baseEmission * glow);
                 r.SetPropertyBlock(_block);
             }
         }

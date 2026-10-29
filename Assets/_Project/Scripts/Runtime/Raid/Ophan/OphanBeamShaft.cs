@@ -14,6 +14,10 @@ namespace Plunderspell.Raid
         // Rings along the shaft: the eye, where the fade starts, and the target.
         private const int Rings = 3;
 
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        // Unit-circle points per side, computed once instead of every Draw (audit P8).
+        private static readonly float[] UnitCos = UnitCircle(Mathf.Cos), UnitSin = UnitCircle(Mathf.Sin);
+
         private readonly GameObject _go;
         private readonly Mesh _mesh;
         private readonly MeshRenderer _renderer;
@@ -72,21 +76,19 @@ namespace Plunderspell.Raid
                 return;
             _go.transform.SetPositionAndRotation(eye, Quaternion.LookRotation(along / length));
 
-            if (_opaque && _renderer.sharedMaterial.HasProperty("_BaseColor"))
-                _renderer.sharedMaterial.SetColor("_BaseColor", colour);
+            if (_opaque && _renderer.sharedMaterial.HasProperty(BaseColorId))
+                _renderer.sharedMaterial.SetColor(BaseColorId, colour);
             float fadeStart = 1f - Mathf.Clamp01(fadeMetres / length);
-            float[] at = { 0f, fadeStart, 1f };
-            float[] alpha = { colour.a, colour.a, 0f };
             for (int ring = 0; ring < Rings; ring++)
             {
-                float radius = Mathf.Lerp(eyeWidth, endWidth, at[ring]) * 0.5f;
+                float at = ring == 0 ? 0f : ring == 1 ? fadeStart : 1f;
+                float radius = Mathf.Lerp(eyeWidth, endWidth, at) * 0.5f;
                 if (_opaque && ring == Rings - 1)
                     radius = 0f;
-                var ringColour = new Color(colour.r, colour.g, colour.b, alpha[ring]);
+                var ringColour = new Color(colour.r, colour.g, colour.b, ring == Rings - 1 ? 0f : colour.a);
                 for (int side = 0; side < Sides; side++)
                 {
-                    float angle = side * Mathf.PI * 2f / Sides;
-                    _vertices[ring * Sides + side] = new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, at[ring] * length);
+                    _vertices[ring * Sides + side] = new Vector3(UnitCos[side] * radius, UnitSin[side] * radius, at * length);
                     _colours[ring * Sides + side] = ringColour;
                 }
             }
@@ -101,6 +103,14 @@ namespace Plunderspell.Raid
             if (_renderer != null) Object.Destroy(_renderer.sharedMaterial);
             Object.Destroy(_mesh);
             Object.Destroy(_go);
+        }
+
+        private static float[] UnitCircle(System.Func<float, float> trig)
+        {
+            var points = new float[Sides];
+            for (int side = 0; side < Sides; side++)
+                points[side] = trig(side * Mathf.PI * 2f / Sides);
+            return points;
         }
 
         private static int[] Triangles()
