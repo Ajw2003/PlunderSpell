@@ -251,6 +251,7 @@ namespace Plunderspell.Raid
         {
             if (isSpawned && !isServer)
                 return;
+            BindRaidScene();
             if (_phase.value != RaidPhase.InLair && _phase.value != RaidPhase.Resolved)
             {
                 Debug.LogWarning($"[Raid] StartRaid ignored: already in phase {_phase.value}.");
@@ -374,6 +375,7 @@ namespace Plunderspell.Raid
         /// </summary>
         public void CallExtraction()
         {
+            BindRaidScene();
             if (isSpawned && !isServer)
                 return;
             if (_phase.value != RaidPhase.Raiding)
@@ -427,6 +429,7 @@ namespace Plunderspell.Raid
         /// </summary>
         public void AbandonRaid()
         {
+            BindRaidScene();
             if (isSpawned && !isServer)
                 return;
             if (_phase.value != RaidPhase.Raiding && _phase.value != RaidPhase.Extracting)
@@ -620,6 +623,45 @@ namespace Plunderspell.Raid
             ApplyResult(worth, saved);
         }
 
+        /// <summary>
+        /// Takes the raid scene's pieces from <see cref="RaidSceneContents.Current"/> and the Lair from
+        /// <see cref="LairHubManager.Current"/> for any reference not set: the director lives in the Bootstrap scene and the
+        /// raid scene is loaded on top of it (scene split, #538). References set by <see cref="Configure"/> are kept.
+        /// </summary>
+        private void BindRaidScene()
+        {
+            RaidSceneContents raid = RaidSceneContents.Current;
+            if (raid != null)
+            {
+                if (_generator == null) _generator = raid.Generator;
+                if (_castleNetwork == null) _castleNetwork = raid.CastleNetwork;
+                if (_lootSpawner == null) _lootSpawner = raid.LootSpawner;
+                if (_guardSpawner == null) _guardSpawner = raid.GuardSpawner;
+                if (_doorSpawner == null) _doorSpawner = raid.DoorSpawner;
+                if (_alarm == null) _alarm = raid.Alarm;
+                if (_extractionZone == null)
+                {
+                    _extractionZone = raid.ExtractionZone;
+                    SubscribeToZone();
+                }
+            }
+            if (_lair == null)
+                _lair = LairHubManager.Current;
+        }
+
+        /// <summary>Lets go of the raid scene's pieces when that scene unloads (scene split, #538).</summary>
+        public void UnbindRaidScene()
+        {
+            UnsubscribeFromZone();
+            _generator = null;
+            _castleNetwork = null;
+            _lootSpawner = null;
+            _guardSpawner = null;
+            _doorSpawner = null;
+            _extractionZone = null;
+            _alarm = null;
+        }
+
         private void SubscribeToZone()
         {
             if (_subscribedToZone || _extractionZone == null)
@@ -705,6 +747,7 @@ namespace Plunderspell.Raid
             // A client builds the same castle from the replicated seed: the geometry is local on
             // every machine, only the seed crosses the network. Loot and guards arrive as network
             // objects from the server instead.
+            BindRaidScene();
             if (phase == RaidPhase.Raiding && NeedsClientBuild(Seed))
                 BuildCastle(Seed);
             else if (phase == RaidPhase.InLair && Castle != null)
