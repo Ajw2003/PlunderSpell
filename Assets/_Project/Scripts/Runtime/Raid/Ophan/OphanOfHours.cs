@@ -313,6 +313,9 @@ namespace Plunderspell.Raid
                 OphanWallBurst.At(hole, (at - eye).normalized);
             // Stops 2 m short of the aim so the floor under the target is never broken.
             Vector3 cutEnd = at - (at - eye).normalized * 2f;
+            var cost = System.Diagnostics.Stopwatch.StartNew();
+            int parts = 0;
+            Bounds? brokenArea = null;
             foreach (int index in pieces)
             {
                 Transform piece = ScorchedRooms.PieceAt(index);
@@ -327,13 +330,30 @@ namespace Plunderspell.Raid
                 {
                     part.groundY = groundY;
                     part.HitAlongLine(eye, cutEnd, CutRadius, CutForce);
+                    parts++;
+                    if (part.TryGetComponent(out Renderer partRenderer))
+                    {
+                        Bounds b = brokenArea ?? partRenderer.bounds;
+                        b.Encapsulate(partRenderer.bounds);
+                        brokenArea = b;
+                    }
                 }
                 if (piece.TryGetComponent(out CastleRoomModule room))
                     ScorchedRooms.Scorch(room);
             }
+            // One line per shot, so a freeze in a playtest can be read from the log (aj, 2026-10-29).
+            Debug.Log($"[Ophan] charged shot hit {parts} parts in {pieces.Length} pieces in {cost.Elapsed.TotalMilliseconds:F1} ms");
             // Guards walk on the host's nav map; only the host updates it, once the broken colliders are in physics.
-            if (isServer)
-                StartCoroutine(RefreshNavAfterBreak(eye, cutEnd));
+            // Only along the line inside what broke: from the eye, 900 m off, the map rescanned the whole castle each
+            // shot, 100-340 ms on the host (aj's freezes, 2026-10-29), and it ran even when nothing broke.
+            if (isServer && brokenArea.HasValue)
+            {
+                Bounds area = brokenArea.Value;
+                area.Expand(NavRefreshRadius * 2f);
+                Vector3 dir = (cutEnd - eye).normalized;
+                Vector3 start = area.IntersectRay(new Ray(eye, dir), out float enter) ? eye + dir * enter : eye;
+                StartCoroutine(RefreshNavAfterBreak(start, cutEnd));
+            }
         }
 
         // Two fixed updates, so a whole physics step has run since the colliders changed whichever side of the step
@@ -343,7 +363,9 @@ namespace Plunderspell.Raid
             yield return new WaitForFixedUpdate();
             yield return new WaitForFixedUpdate();
             ProceduralCastleGenerator generator = FindFirstObjectByType<ProceduralCastleGenerator>();
+            var cost = System.Diagnostics.Stopwatch.StartNew();
             generator?.LastGenerated?.NavGraph?.RefreshAfterBreak(from, to, NavRefreshRadius);
+            Debug.Log($"[Ophan] nav refresh after the break in {cost.Elapsed.TotalMilliseconds:F1} ms");
         }
 
         [ObserversRpc]

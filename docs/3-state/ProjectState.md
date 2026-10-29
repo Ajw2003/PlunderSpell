@@ -51,7 +51,11 @@ Still outside it, each needing a keep-or-drop call:
   (`docs/generated/ophan-redo-468/clusters-1/`) shows clusters flying as blocks. The dark slab
   seen after the break was the old scorch tint on the whole room; the tint is gone
   (`ScorchedRooms.Scorch` now only records the room) and the `clusters-3` run shows the walls
-  textured. #494 (the recorded QA run) not done.
+  textured. Stone edges are drawn only once the cluster across them breaks (`64f94264`). A charged
+  shot's freeze was the guards' nav refresh scanning from the Ophan's eye 900 m off: 100-340 ms per
+  shot on the host, now limited to what broke (20.5 ms) and skipped when nothing did; the break
+  itself costs 20-40 ms for one room (`[Ophan] charged shot` and `nav refresh` log lines, co-op
+  run `cost-3`). #494 (the recorded QA run) not done.
 - `AjsAgent/fear-pass-handoff` (2026-10-12, #386): the fear pass's approved designs, and the art
   for the Wick (model and nine clips, #406) and the Ophan of Hours (model and five clips, #411,
   #412), with `staging-2026-10-11` merged in, and the import rules for all four fear files (#413),
