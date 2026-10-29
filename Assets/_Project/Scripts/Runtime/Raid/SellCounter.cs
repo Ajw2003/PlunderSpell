@@ -262,7 +262,7 @@ namespace Plunderspell.Raid
         {
             PutPouchOnCounter(coins);
             // Out of the pile first so its save drops the piece, then out of any raid spawner's list.
-            FindFirstObjectByType<HaulLanding>()?.Remove(piece);
+            HaulLanding.Current?.Remove(piece);
             foreach (LootSpawner spawner in FindObjectsByType<LootSpawner>(FindObjectsSortMode.None))
                 spawner.Remove(piece);
             Destroy(piece); // on a spawned piece the server's destroy despawns it for every client

@@ -43,6 +43,17 @@ namespace Plunderspell.Lair
         /// <summary>The coins banked into <paramref name="seat"/>'s strongbox (0 to 3). Saved per slot.</summary>
         public int Purse(int seat) => _purses[seat];
 
+        /// <summary>The live manager, found without a scene search (scene split, #537).</summary>
+        public static LairHubManager Current { get; private set; }
+
+        private void OnEnable() => Current = this;
+
+        private void OnDisable()
+        {
+            if (Current == this)
+                Current = null;
+        }
+
         private void Awake() => Load();
 
         /// <summary>Load the active save slot's state from PlayerPrefs (falling back to defaults).</summary>

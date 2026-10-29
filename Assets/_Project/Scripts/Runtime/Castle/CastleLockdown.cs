@@ -52,14 +52,20 @@ namespace Plunderspell.Castle
                 _alarm = FindObjectOfType<EnemyDirector>();
         }
 
+        /// <summary>The live lockdown, found without a scene search (scene split, #537).</summary>
+        public static CastleLockdown Current { get; private set; }
+
         private void OnEnable()
         {
+            Current = this;
             if (_alarm != null)
                 _alarm.AlarmStateChanged += OnAlarmStateChanged;
         }
 
         private void OnDisable()
         {
+            if (Current == this)
+                Current = null;
             if (_alarm != null)
                 _alarm.AlarmStateChanged -= OnAlarmStateChanged;
         }

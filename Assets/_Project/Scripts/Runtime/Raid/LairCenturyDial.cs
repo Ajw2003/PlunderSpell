@@ -49,7 +49,7 @@ namespace Plunderspell.Raid
         private void Update()
         {
             if (_lair == null)
-                _lair = FindFirstObjectByType<LairHubManager>();
+                _lair = LairHubManager.Current; // (scene split, #537)
             if (_lair == null)
                 return;
 

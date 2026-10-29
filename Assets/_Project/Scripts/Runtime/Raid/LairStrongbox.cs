@@ -32,7 +32,7 @@ namespace Plunderspell.Raid
                 return;
             if (pouch.TryGetComponent(out LootPickup pickup) && pickup.IsBeingCarried)
                 return; // still in a hand
-            FindFirstObjectByType<LairHubManager>()?.BankPouch(_seat, pouch.TakeCoins());
+            LairHubManager.Current?.BankPouch(_seat, pouch.TakeCoins());
             Destroy(pouch.gameObject); // on a spawned pouch the server's destroy despawns it for every client
         }
     }

@@ -41,8 +41,12 @@ namespace Plunderspell.Raid
 
         // Saves happen only at these moments, all events: a haul lands, a piece leaves, the company sets out,
         // the session ends, the application quits. Restores: the server starting and a save slot loading.
+        /// <summary>The live landing, found without a scene search (scene split, #537).</summary>
+        public static HaulLanding Current { get; private set; }
+
         private void OnEnable()
         {
+            Current = this;
             EventManager.Instance?.Subscribe(this, (HaulExtracted e) => Land(e));
             EventManager.Instance?.Subscribe(this, (SaveSlotLoaded e) => Reload());
             EventManager.Instance?.Subscribe(this, (CoopChanged e) => OnCoopChanged());
@@ -52,7 +56,12 @@ namespace Plunderspell.Raid
             OnCoopChanged();
         }
 
-        private void OnDisable() => EventManager.Instance?.UnsubscribeFromAllEvents(this);
+        private void OnDisable()
+        {
+            if (Current == this)
+                Current = null;
+            EventManager.Instance?.UnsubscribeFromAllEvents(this);
+        }
 
         // Quitting from the Lair menu is a quit too; scene teardown is not used because pieces may already be gone.
         private void OnApplicationQuit() => SaveIfLive();
@@ -197,7 +206,7 @@ namespace Plunderspell.Raid
         private List<RaidLootTable> AllTables()
         {
             var tables = new List<RaidLootTable>();
-            RaidDirector director = FindFirstObjectByType<RaidDirector>();
+            RaidDirector director = RaidDirector.Current; // (scene split, #537)
             if (director != null && director.EraContent != null)
             {
                 foreach (EraContentCatalogue.Entry entry in director.EraContent.Entries)

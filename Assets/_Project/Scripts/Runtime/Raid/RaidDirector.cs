@@ -122,6 +122,17 @@ namespace Plunderspell.Raid
         /// </summary>
         public const float PlayerRingRadius = 3.5f;
 
+        /// <summary>The live director, found without a scene search (scene split, #537).</summary>
+        public static RaidDirector Current { get; private set; }
+
+        private void OnEnable() => Current = this;
+
+        private void OnDisable()
+        {
+            if (Current == this)
+                Current = null;
+        }
+
         private bool _subscribedToZone;
 
         protected override void OnSpawned()
@@ -281,7 +292,7 @@ namespace Plunderspell.Raid
         // lockdown has to tell the graph about every door it changes (#207).
         private static void WireLockdownToNavigation(CastleNavGraph graph)
         {
-            CastleLockdown lockdown = FindFirstObjectByType<CastleLockdown>();
+            CastleLockdown lockdown = CastleLockdown.Current; // (scene split, #537)
             if (lockdown == null)
                 Debug.LogWarning("[Raid] No CastleLockdown in the scene; guards will walk through barred doors.");
             else
