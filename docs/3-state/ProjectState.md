@@ -55,7 +55,11 @@ Still outside it, each needing a keep-or-drop call:
   shot's freeze was the guards' nav refresh scanning from the Ophan's eye 900 m off: 100-340 ms per
   shot on the host, now limited to what broke (20.5 ms) and skipped when nothing did; the break
   itself costs 20-40 ms for one room (`[Ophan] charged shot` and `nav refresh` log lines, co-op
-  run `cost-3`). #494 (the recorded QA run) not done.
+  run `cost-3`). Frame pacing work, #523: debris is set up at castle load and its shader warmed
+  (`f8dc7fd1`, `81c52f2c`); the nav refresh scans at most 2 ms a frame and rebuilds the guards' map on
+  a background thread, swapped in when done (#524; co-op run `cost-9`: scan 1-6 ms over 1-4 frames,
+  rebuild 70-190 ms off the main thread). A charged shot's break still costs 4-23 ms in one frame
+  (#525 next). #494 (the recorded QA run) not done.
 - `AjsAgent/fear-pass-handoff` (2026-10-12, #386): the fear pass's approved designs, and the art
   for the Wick (model and nine clips, #406) and the Ophan of Hours (model and five clips, #411,
   #412), with `staging-2026-10-11` merged in, and the import rules for all four fear files (#413),

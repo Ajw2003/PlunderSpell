@@ -68,6 +68,24 @@ namespace Plunderspell.Castle
             IsUsable = RegisterModules(placed);
         }
 
+        /// <summary>A copy whose areas and links can be rebuilt off the main thread, then swapped in (aj's frame pacing,
+        /// 2026-10-29). The module lookup is shared: it never changes after the build.</summary>
+        public CastleNavGrid Copy() => new CastleNavGrid(this);
+
+        private CastleNavGrid(CastleNavGrid from)
+        {
+            ModuleCount = from.ModuleCount;
+            IsUsable = from.IsUsable;
+            WalkableCellCount = from.WalkableCellCount;
+            _modulePosition = (Vector3[])from._modulePosition.Clone();
+            _moduleHasTile = (bool[])from._moduleHasTile.Clone();
+            _walkable = (byte[])from._walkable.Clone();
+            _heightCm = (short[])from._heightCm.Clone();
+            _areaId = (int[])from._areaId.Clone();
+            _archway = (bool[])from._archway.Clone();
+            _lookup = from._lookup;
+        }
+
         // Cell lookups go by grid cell and assume neighbours sit exactly one span apart.
         private bool RegisterModules(List<ProceduralCastleData.PlacedModule> placed)
         {

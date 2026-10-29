@@ -32,6 +32,7 @@ namespace Plunderspell.Castle
         private static readonly int[] s_stepColumn = { 1, -1, 0, 0 };
         private static readonly int[] s_stepRow = { 0, 0, 1, -1 };
         private const int MaxGrowPasses = 6;
+        private bool _refreshing;
 
         private CastleNavGraph() { }
 
@@ -76,22 +77,28 @@ namespace Plunderspell.Castle
         // Areas, archway links and the room crossings from the cells as they stand, plus the links a break opened.
         private void Connect()
         {
-            CastleNavAreas areas = CastleNavAreas.Label(_grid);
-            List<NavLink> links = CastleNavStitcher.FindLinks(_grid, _data, areas);
-            foreach (NavLink hole in _holeLinks)
+            (_portals, _pathFinder) = ConnectOn(_grid, _data, _holeLinks);
+        }
+
+        // Touches only the grid it is given and new objects, so it can run off the main thread on a copy.
+        private static (CastleNavPortalGraph, CastleNavPathFinder) ConnectOn(CastleNavGrid grid, ProceduralCastleData data, List<NavLink> holeLinks)
+        {
+            CastleNavAreas areas = CastleNavAreas.Label(grid);
+            List<NavLink> links = CastleNavStitcher.FindLinks(grid, data, areas);
+            foreach (NavLink hole in holeLinks)
             {
-                if (!_grid.IsWalkable(hole.CellA) || !_grid.IsWalkable(hole.CellB))
+                if (!grid.IsWalkable(hole.CellA) || !grid.IsWalkable(hole.CellB))
                     continue;
-                areas.Join(_grid, hole.CellA, hole.CellB);
+                areas.Join(grid, hole.CellA, hole.CellB);
                 links.Add(hole);
             }
-            areas.Flatten(_grid);
+            areas.Flatten(grid);
 
             var heap = new NavMinHeap();
-            var gridSearch = new CastleNavGridSearch(_grid, heap);
-            _portals = new CastleNavPortalGraph(links, _grid.ModuleCount);
-            _portals.ComputeRoomCrossings(gridSearch, _grid.ModuleCount);
-            _pathFinder = new CastleNavPathFinder(_grid, _portals, gridSearch, new CastleNavPortalSearch(_portals, heap));
+            var gridSearch = new CastleNavGridSearch(grid, heap);
+            var portals = new CastleNavPortalGraph(links, grid.ModuleCount);
+            portals.ComputeRoomCrossings(gridSearch, grid.ModuleCount);
+            return (portals, new CastleNavPathFinder(grid, portals, gridSearch, new CastleNavPortalSearch(portals, heap)));
         }
 
         /// <summary>World position of a cell's centre, at standing height.</summary>
@@ -220,6 +227,39 @@ namespace Plunderspell.Castle
             CastleNavPortalGraph old = _portals;
             _grid.ResetAreas();
             Connect();
+            CarryDoorState(old);
+        }
+
+        /// <summary>
+        /// <see cref="Rebuild"/> on a copy of the map, off the main thread, swapped in when done: the guards use the old
+        /// map until then. It cost about 13 ms in one frame on the host after a break (aj's frame pacing, 2026-10-29).
+        /// </summary>
+        public System.Collections.IEnumerator RebuildOffMainThread()
+        {
+            if (_grid == null)
+                yield break;
+            CastleNavGrid grid = _grid.Copy();
+            grid.ResetAreas();
+            ProceduralCastleData data = _data;
+            var holes = new List<NavLink>(_holeLinks);
+            var job = System.Threading.Tasks.Task.Run(() => ConnectOn(grid, data, holes));
+            while (!job.IsCompleted)
+                yield return null;
+            if (job.IsFaulted)
+            {
+                Debug.LogException(job.Exception);
+                Rebuild();
+                yield break;
+            }
+            CastleNavPortalGraph old = _portals;
+            _grid = grid;
+            (_portals, _pathFinder) = job.Result;
+            CarryDoorState(old);
+        }
+
+        // Door costs set on the old archways (locked or closed doors) move to the same archways in the new graph.
+        private void CarryDoorState(CastleNavPortalGraph old)
+        {
             _portals.StartVersionAt(old.DoorVersion + 1);
             for (int link = 0; link < old.LinkCount; link++)
             {
@@ -256,6 +296,12 @@ namespace Plunderspell.Castle
         {
             if (_grid == null || _data == null)
                 yield break;
+            // One refresh at a time: a second shot's waits, so the off-thread rebuild never misses its edits.
+            while (_refreshing)
+                yield return null;
+            _refreshing = true;
+            try
+            {
             var frame = System.Diagnostics.Stopwatch.StartNew();
             double totalMs = 0;
             int frames = 1;
@@ -289,9 +335,20 @@ namespace Plunderspell.Castle
             if (frame.Elapsed.TotalMilliseconds >= budgetMs) { frames++; yield return null; }
             frame.Restart();
             if (cleared + added + holes > 0)
-                Rebuild();
+            {
+                if (float.IsPositiveInfinity(budgetMs))
+                    Rebuild();
+                else
+                {
+                    System.Collections.IEnumerator rebuild = RebuildOffMainThread();
+                    while (rebuild.MoveNext())
+                        yield return null;
+                }
+            }
             Debug.Log($"[CastleNav] Break refresh: {cleared} cells cleared, {added} added, {holes} wall hole links, links {linksBefore} -> {LinkCount}; " +
-                      $"{(lastColumn - firstColumn + 1) * (lastRow - firstRow + 1)} columns scanned in {scanMs:F1} ms over {frames} frames, rebuild {frame.Elapsed.TotalMilliseconds:F1} ms in one.");
+                      $"{(lastColumn - firstColumn + 1) * (lastRow - firstRow + 1)} columns scanned in {scanMs:F1} ms over {frames} frames, rebuild {frame.Elapsed.TotalMilliseconds:F1} ms wall time.");
+            }
+            finally { _refreshing = false; }
         }
 
         // A cell whose floor is gone (rooms only: a curtain piece stands on the scene's ground) or that the castle now overlaps.
