@@ -96,6 +96,14 @@ namespace Plunderspell.Raid
                 return;
             }
 
+            // Back in the Lair after a raid (died or extracted): the castle, its broken walls and their debris go now,
+            // not when the next raid sets out; a whole castle stayed loaded behind the Lair (aj, 2026-10-29).
+            if (next == GameState.LairRoom && _director.Phase == RaidPhase.Resolved)
+            {
+                _director.ReturnToLair();
+                return;
+            }
+
             if (next != GameState.Playing || previous == GameState.Paused)
                 return;
 
