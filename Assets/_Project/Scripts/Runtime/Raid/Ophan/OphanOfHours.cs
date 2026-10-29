@@ -224,13 +224,24 @@ namespace Plunderspell.Raid
 
         private static Vector3 AimPoint(PlayerStateMachine body) => body.transform.position + Vector3.up * ChestAboveBody;
 
-        private static bool IsStone(Collider hit) => hit != null && hit.GetComponentInParent<ProceduralCastleGenerator>() != null;
+        private Transform _castleRoot;
+
+        // A cached root and IsChildOf replace a GetComponentInParent per hit in the per-frame cover check (audit P2).
+        private bool IsStone(Collider hit)
+        {
+            if (_castleRoot == null)
+            {
+                var generator = FindFirstObjectByType<ProceduralCastleGenerator>();
+                _castleRoot = generator != null ? generator.transform : null;
+            }
+            return hit != null && _castleRoot != null && hit.transform.IsChildOf(_castleRoot);
+        }
 
         /// <summary>Whether castle stone lies on the line from its eye to the target (the per-frame cover check).</summary>
         private bool StoneBetween(Vector3 from, Vector3 to)
         {
             Vector3 line = to - from;
-            int count = Physics.RaycastNonAlloc(from, line.normalized, _hits, line.magnitude, ~0, QueryTriggerInteraction.Ignore);
+            int count = Physics.RaycastNonAlloc(from, line.normalized, _hits, line.magnitude, _stoneMask, QueryTriggerInteraction.Ignore);
             for (int i = 0; i < count; i++)
                 // Any part of the built castle is stone, room or not (towers, the keep, the curtain wall's dressing).
                 // A charged beam's hole is a gap in the collider itself, so nothing else is let through (#467).

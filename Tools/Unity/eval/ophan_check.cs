@@ -451,6 +451,14 @@ switch (action)
             if (hit.collider.GetComponentInParent(room) != null) { first = hit.collider.name + " at " + (far + 2f - hit.distance).ToString("F1") + " m from the player"; break; }
         return $"hole cut meshes {cut}; room stone on the eye line: {first}";
     }
+    case "leftovers":
+        // Either machine (aj, 2026-10-29): what of the raid's castle and its breaking is still in the scene.
+        return "leftovers: fracture effects " + FindAll("Plunderspell.Fracture.FractureEffect").Length
+            + ", fracturable parts " + FindAll("Plunderspell.Fracture.FracturableObject").Length
+            + ", wall bursts " + FindAll("Plunderspell.Raid.OphanWallBurst").Length
+            + ", castle rooms " + FindAll("Plunderspell.Castle.CastleRoomModule").Length
+            + ", state " + Plunderspell.Core.GameServices.GameState.CurrentState;
+
     case "shot":
         UnityEngine.ScreenCapture.CaptureScreenshot(arg);
         return "shot requested " + arg;

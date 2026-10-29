@@ -384,21 +384,34 @@ namespace Plunderspell.Fracture
             float len = Vector3.Distance(from, to);
             float step = Mathf.Max(radius * 0.5f, 0.01f);
 
+            // Clip to the bounds first so a ~900 m beam walks only its part inside them (audit P5).
+            float start = 0f, end = 0f;
+            if (len > 0f)
+            {
+                if (!b.IntersectRay(new Ray(from, to - from), out start)) return;
+                if (!b.IntersectRay(new Ray(to, from - to), out float fromEnd)) return;
+                end = len - fromEnd;
+                if (end < start) return;
+            }
+            else if (!b.Contains(from)) return;
+
+            if (activeEffects == null) activeEffects = FractureEngine.Fracture(this);
             bool changed = false;
-            for (float d = 0f; d <= len + 1e-4f; d += step)
+            for (float d = start; d <= end + 1e-4f; d += step)
             {
                 Vector3 p = len > 0f ? Vector3.Lerp(from, to, d / len) : from;
-                if (!b.Contains(p)) continue;
-                if (activeEffects == null) activeEffects = FractureEngine.Fracture(this);
-                if (activeEffects != null)
-                {
-                    foreach (var effect in activeEffects)
-                    {
-                        if (effect != null) effect.ApplyImpact(radius, p, force);
-                    }
-                }
                 changed |= MarkBroken(p, radius);
                 if (len <= 0f) break;
+            }
+
+            // One impact per effect, at the clipped point nearest the bounds centre (audit P5).
+            Vector3 mid = len > 0f ? Vector3.Lerp(from, to, Mathf.Clamp(Vector3.Dot(b.center - from, (to - from) / len), start, end) / len) : from;
+            if (activeEffects != null)
+            {
+                foreach (var effect in activeEffects)
+                {
+                    if (effect != null) effect.ApplyImpact(radius, mid, force);
+                }
             }
             if (changed) RebuildCollisionMesh();
         }

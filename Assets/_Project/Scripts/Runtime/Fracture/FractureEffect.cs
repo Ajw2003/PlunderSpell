@@ -21,6 +21,19 @@ namespace Plunderspell.Fracture
         
         private int kernelID;
         private int kernelImpactID;
+        private int kernelDropID;
+
+        // Property IDs instead of per-call string lookups on the per-frame path (audit P19).
+        private static readonly int PiecesId = Shader.PropertyToID("_Pieces");
+        private static readonly int DeltaTimeId = Shader.PropertyToID("_DeltaTime");
+        private static readonly int GravityId = Shader.PropertyToID("_Gravity");
+        private static readonly int GroundYId = Shader.PropertyToID("_GroundY");
+        private static readonly int ImpactPointId = Shader.PropertyToID("_ImpactPoint");
+        private static readonly int ImpactRadiusId = Shader.PropertyToID("_ImpactRadius");
+        private static readonly int ImpactForceId = Shader.PropertyToID("_ImpactForce");
+        private static readonly int DespawnTimeId = Shader.PropertyToID("_DespawnTime");
+        private static readonly int DropIndicesId = Shader.PropertyToID("_DropIndices");
+        private static readonly int DropCountId = Shader.PropertyToID("_DropCount");
 
         public void Initialize(NativeArray<PieceData> pieceData, NativeArray<VertexData> vertexData, ComputeShader shader, Material material, Shader fractureShader)
         {
@@ -39,7 +52,8 @@ namespace Plunderspell.Fracture
             
             kernelID = computeShader.FindKernel("CSMain");
             kernelImpactID = computeShader.FindKernel("CSImpact");
-            
+            kernelDropID = computeShader.FindKernel("CSDrop");
+
             // A copy of the piece's own material with the fracture shader swapped in, as the original did; the shader comes from
             // the material FracturableObject resolved (serialized or Resources/Fracture/Fracture) instead of Shader.Find.
             renderMaterial = new Material(renderMaterial);
@@ -53,13 +67,13 @@ namespace Plunderspell.Fracture
             renderMaterial.SetBuffer("_Pieces", pieceBuffer);
             renderMaterial.SetBuffer("_Vertices", vertexBuffer);
             
-            computeShader.SetBuffer(kernelID, "_Pieces", pieceBuffer);
-            computeShader.SetBuffer(kernelImpactID, "_Pieces", pieceBuffer);
+            computeShader.SetBuffer(kernelID, PiecesId, pieceBuffer);
+            computeShader.SetBuffer(kernelImpactID, PiecesId, pieceBuffer);
 
             // A first dispatch at load, far from every piece, so the kernel is ready before the first real hit (aj's
             // hitches, 2026-10-29). It moves nothing.
-            computeShader.SetVector("_ImpactPoint", new Vector3(1e7f, 1e7f, 1e7f));
-            computeShader.SetFloat("_ImpactRadius", 0f);
+            computeShader.SetVector(ImpactPointId, new Vector3(1e7f, 1e7f, 1e7f));
+            computeShader.SetFloat(ImpactRadiusId, 0f);
             computeShader.Dispatch(kernelImpactID, Mathf.CeilToInt(pieceCount / 64f), 1, 1);
         }
 
@@ -68,17 +82,16 @@ namespace Plunderspell.Fracture
             if (pieceBuffer == null || pieceIndices == null || pieceIndices.Length == 0) return;
             
             Wake();
-            int kernelDropID = computeShader.FindKernel("CSDrop");
             if (kernelDropID < 0) return;
-            
+
             ComputeBuffer dropBuffer = new ComputeBuffer(pieceIndices.Length, 4);
             dropBuffer.SetData(pieceIndices);
-            
-            computeShader.SetBuffer(kernelDropID, "_Pieces", pieceBuffer);
-            computeShader.SetBuffer(kernelDropID, "_DropIndices", dropBuffer);
-            computeShader.SetInt("_DropCount", pieceIndices.Length);
-            computeShader.SetFloat("_DespawnTime", despawnTime);
-            computeShader.SetFloat("_GroundY", groundY);
+
+            computeShader.SetBuffer(kernelDropID, PiecesId, pieceBuffer);
+            computeShader.SetBuffer(kernelDropID, DropIndicesId, dropBuffer);
+            computeShader.SetInt(DropCountId, pieceIndices.Length);
+            computeShader.SetFloat(DespawnTimeId, despawnTime);
+            computeShader.SetFloat(GroundYId, groundY);
             
             int groups = Mathf.CeilToInt(pieceIndices.Length / 64f);
             computeShader.Dispatch(kernelDropID, groups, 1, 1);
@@ -91,12 +104,12 @@ namespace Plunderspell.Fracture
             if (pieceBuffer == null) return;
             
             Wake();
-            computeShader.SetBuffer(kernelImpactID, "_Pieces", pieceBuffer);
-            computeShader.SetVector("_ImpactPoint", point);
-            computeShader.SetFloat("_ImpactRadius", impactRadius);
-            computeShader.SetFloat("_ImpactForce", force);
-            computeShader.SetFloat("_DespawnTime", despawnTime);
-            computeShader.SetFloat("_GroundY", groundY);
+            computeShader.SetBuffer(kernelImpactID, PiecesId, pieceBuffer);
+            computeShader.SetVector(ImpactPointId, point);
+            computeShader.SetFloat(ImpactRadiusId, impactRadius);
+            computeShader.SetFloat(ImpactForceId, force);
+            computeShader.SetFloat(DespawnTimeId, despawnTime);
+            computeShader.SetFloat(GroundYId, groundY);
             
             int groups = Mathf.CeilToInt(pieceCount / 64f);
             computeShader.Dispatch(kernelImpactID, groups, 1, 1);
@@ -110,10 +123,10 @@ namespace Plunderspell.Fracture
             if (pieceBuffer == null || vertexBuffer == null) return;
             if (hideStatic && Time.time > awakeUntil) return;
             
-            computeShader.SetBuffer(kernelID, "_Pieces", pieceBuffer);
-            computeShader.SetFloat("_DeltaTime", Time.deltaTime);
-            computeShader.SetVector("_Gravity", gravity);
-            computeShader.SetFloat("_GroundY", groundY);
+            computeShader.SetBuffer(kernelID, PiecesId, pieceBuffer);
+            computeShader.SetFloat(DeltaTimeId, Time.deltaTime);
+            computeShader.SetVector(GravityId, gravity);
+            computeShader.SetFloat(GroundYId, groundY);
             
             int groups = Mathf.CeilToInt(pieceCount / 64f);
             computeShader.Dispatch(kernelID, groups, 1, 1);

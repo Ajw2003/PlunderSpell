@@ -207,6 +207,9 @@ namespace Plunderspell.Fracture
 
                 GameObject effectObj = new GameObject("FractureEffect_" + target.gameObject.name + "_SubMesh_" + s);
                 effectObj.transform.position = target.transform.position;
+                // A child of its part, so clearing the castle (back to the Lair) destroys it and frees its GPU buffers;
+                // at the scene root every castle's debris outlived it (aj, 2026-10-29). The pieces are in world space.
+                effectObj.transform.SetParent(target.transform, true);
                 
                 FractureEffect effect = effectObj.AddComponent<FractureEffect>();
                 effect.gravity = target.gravity;

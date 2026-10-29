@@ -72,4 +72,9 @@ sleep 2
 say "after the second shot: $(ophan host read | grep -o 'player local=True[^|]*')"
 say "frame rate after the break: $(fps)"
 sleep 4
+# Back to the Lair (aj, 2026-10-29): nothing of the castle or its breaking may stay on either machine.
+say "before the Lair: host $(ophan host leftovers); client $(ophan client leftovers)"
+say "host to the Lair: $(timeout 60 bash Tools/Unity/eval.sh 'Plunderspell.Core.GameServices.GameState.ChangeState(Plunderspell.Core.GameState.LairRoom); return "returned";' 2>&1 | tail -1)"
+sleep 4
+say "in the Lair: host $(ophan host leftovers); client $(ophan client leftovers)"
 say "done; recording in $out/run.mkv"
