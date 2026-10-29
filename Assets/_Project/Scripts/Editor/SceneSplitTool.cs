@@ -36,6 +36,12 @@ namespace Plunderspell.EditorTools
             Move(raid, bootstrap, BootstrapRoots);
             Move(raid, lair, LairRoots);
             AddContents(raid);
+            if (Find(bootstrap, "SceneFlow") == null)
+            {
+                var flow = new GameObject("SceneFlow");
+                SceneManager.MoveGameObjectToScene(flow, bootstrap);
+                flow.AddComponent<SceneFlow>();
+            }
 
             EditorSceneManager.SaveScene(bootstrap, BootstrapPath);
             EditorSceneManager.SaveScene(lair, LairPath);
