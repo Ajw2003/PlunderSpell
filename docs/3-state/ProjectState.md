@@ -59,7 +59,11 @@ Still outside it, each needing a keep-or-drop call:
   (`f8dc7fd1`, `81c52f2c`); the nav refresh scans at most 2 ms a frame and rebuilds the guards' map on
   a background thread, swapped in when done (#524; co-op run `cost-9`: scan 1-6 ms over 1-4 frames,
   rebuild 70-190 ms off the main thread). A charged shot's break still costs 4-23 ms in one frame
-  (#525 next). #494 (the recorded QA run) not done.
+  (#525 next). After #524-#526 a shot breaking 4-5 parts costs 4-9 ms. Back in the Lair after a raid,
+  the castle now clears at once (it stayed loaded until the next raid set out) and debris effects are
+  children of their part: co-op run `cost-15` counted 63 rooms, 214 parts and 434 debris effects
+  before, and 0 of each on both machines after. Plan for the Lair and Market in their own scene:
+  `docs/plans/lair-scene-split.html`, waiting on aj. #494 (the recorded QA run) not done.
 - `AjsAgent/fear-pass-handoff` (2026-10-12, #386): the fear pass's approved designs, and the art
   for the Wick (model and nine clips, #406) and the Ophan of Hours (model and five clips, #411,
   #412), with `staging-2026-10-11` merged in, and the import rules for all four fear files (#413),

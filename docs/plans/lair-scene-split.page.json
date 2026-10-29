@@ -1,0 +1,60 @@
+{
+ "title": "Lair in its own scene",
+ "eyebrow": "Your ask on 2026-10-29: the Lair and the Market in their own scene, so the raid scene clears and resets cleanly",
+ "approval": "Design approved: lair scene split",
+ "short": {
+  "lead": "Today the Lair and the Market are two rooms inside RaidScene, placed 1000 m and 1100 m off to the side, and you walk between them and the castle by teleport. Nothing in the game loads a scene. So a raid's castle, its broken walls and its debris live in the same scene as the Lair, and only code we remember to write cleans them up. A co-op check just showed it: after a raid ended, all 63 rooms, 213 breakable parts and 433 debris effects were still loaded behind the Lair on both machines. I've fixed that one case (the castle now clears as you arrive back), but you're right that the real fix is separate scenes. This page shows how I'd split them and has three choices for you.",
+  "hint": "Tap an item to see what I found.",
+  "key": [["Found in the code", ""], ["You pick", "you"]],
+  "items": [
+   ["search", "Today", "One scene holds everything", "",
+    "RaidScene holds the network manager, the game state, the event manager, the Lair (with the ledger, century dial, strongbox and portal), the Market (counters, haul landing) and the raid (castle generator, loot and guard spawners, the Ophan, extraction). The Lair and Market are placed by RaidSceneRooms.cs and joined by RoomTravel teleports. PurrNet has a scene module, but nothing uses it. The OphanGym is built as a copy of RaidScene.",
+    "Nothing to pick."],
+   ["search", "Saves", "What already survives a raid", "",
+    "Purses, debt and the haul pile are saved per save slot (LairHubManager, HaulPileSave) and restored when the server starts. That is what makes a split safe: the Lair can be rebuilt from the save, so nothing in it has to live inside the raid scene.",
+    "Nothing to pick."],
+   ["stop", "Links", "Code that reaches across", "",
+    "Five places find an object that would end up in the other scene: the century dial and the strongbox find the Lair hub, the haul landing finds the raid director, a market counter finds the haul landing, and the raid director finds the castle lockdown. Each needs a reference that survives the split, such as a static registry or an event, instead of a scene search.",
+    "Nothing to pick."],
+   ["hand", "Split", "How the scenes split", "you",
+    "Option A under Choices is my suggestion: a small Bootstrap scene that is never unloaded (network, game state, events, players), with the Lair scene and the Raid scene loaded on top of it, one at a time, by PurrNet so both machines switch together.",
+    "Pick under Choices."],
+   ["hand", "Loading", "When the raid scene loads", "you",
+    "Loading a scene costs a long frame. Your rule is no hitches, so my suggestion loads the next raid scene in the background while you are in the Lair and switches at the portal.",
+    "Pick under Choices."]
+  ]
+ },
+ "changes": [
+  ["new", "Bootstrap scene", "Never unloaded: network manager, game state, event manager, the players.", ["Part of RaidScene", "Its own scene, loaded first"], "New Assets/_Project/Scenes/Bootstrap.unity; the build's first scene.", null],
+  ["new", "Lair scene", "The Lair room, the Market yard, their doors, the portal, the ledger, dial, strongbox, counters and haul landing.", ["Rooms at 1000 m and 1100 m in RaidScene", "Its own scene at the origin"], "New Assets/_Project/Scenes/Lair.unity; LairHubManager, RoomTravel, LairPortalTrigger, SellCounter, HaulLanding, LairStrongbox move with it.", null],
+  ["chg", "Raid scene", "Only the raid: castle generator, spawners, the Ophan, extraction.", ["Holds the Lair, the Market and the raid", "Holds the raid only; unloaded on return, so everything in it goes"], "RaidScene.unity; RaidDirector and RaidBootstrapper start and end raids by loading and unloading it through PurrNet's scene module.", null],
+  ["chg", "Cross-scene links", "The five scene searches become references that survive the split.", ["FindFirstObjectByType across rooms", "Static registries or events"], "LairCenturyDial, LairStrongbox, HaulLanding, SellCounter, RaidDirector.", null],
+  ["chg", "Gym, tests and tools", "The OphanGym, the scene tests and the co-op scripts follow the split.", ["Built as a copy of RaidScene", "A raid-scene variant loaded with the same Lair"], "OphanGymBuilder, AuthoredRaidSceneTests, RaidSceneCastingTests, OphanGymSceneTests, coop_local.sh.", null]
+ ],
+ "choices": [
+  ["split", "How should the scenes split?", [
+    ["A", "Bootstrap plus Lair plus Raid", 1, "A Bootstrap scene stays loaded the whole session and holds the network, game state, events and the players. The Lair scene and the Raid scene are loaded on top of it, one at a time, by PurrNet's scene module so both machines switch together. Returning from a raid unloads the raid scene, so everything in it goes, whatever spawned it. Players are never despawned, so co-op never reconnects."],
+    ["B", "Two scenes, swapped whole", 0, "The Lair scene and the Raid scene each hold their own copy of everything and replace each other completely. Simplest to set up, but players, the network session and anything carried are torn down at every switch and must be rebuilt, which risks the co-op session and carried loot."],
+    ["C", "Lair stays, raid in its own scene", 0, "RaidScene keeps the Lair and the Market, and only the castle and its spawners move to a raid scene loaded on top. The smallest change, but the Lair still shares a scene with the network and game state, so it is not the full separation you asked for."]
+   ], "A gives the clean reset you asked for without touching the co-op connection. B resets even more but tears down the session each time. C is half the job."],
+  ["load", "When should the raid scene load?", [
+    ["A", "In the background while you're in the Lair", 1, "The next raid scene loads quietly while you stand in the Lair, inactive, and is switched on at the portal. No long frame anywhere, at the cost of holding the raid scene in memory while you're in the Lair."],
+    ["B", "At the portal, behind a short fade", 0, "The raid scene loads when you step into the portal, behind a fade to black of about a second. Less memory in the Lair, but there is a load pause each time."]
+   ], "Your rule is steady frames over memory, so A."],
+  ["gym", "What happens to the Ophan Gym?", [
+    ["A", "A raid-scene variant loaded with the same Lair", 1, "The gym becomes a raid scene of its own (the Ophan comes 30 s in), loaded through the same Lair and portal as a real raid, so the gym tests the real flow."],
+    ["B", "Stays one combined test scene", 0, "The gym keeps the Lair inside it as today. Faster to start, but it no longer tests the real Lair-to-raid flow."]
+   ], "A keeps the gym honest."]
+ ],
+ "wrapup": {
+  "summary": "The Lair and the Market move to their own scene, with a small Bootstrap scene underneath, and a raid unloads its whole scene on return. Today's leak (a whole castle left behind the Lair) is already fixed for that one case.",
+  "changing": "Nothing about scenes changes until you pick. The leftover fix and the frame-pacing work are on AjsAgent/gym-with-demand-page.",
+  "blocking": "Your three picks.",
+  "next": "I open a GitHub issue for the split with one sub-issue per step, then build it on this branch and check it in co-op: set out, break walls, die, return, and count that nothing of the raid is left on either machine.",
+  "todo": [
+   "Pick under Choices.",
+   "Tap <b>Copy my reply</b>.",
+   "Send it with \"Design approved: lair scene split\", or tell me what to change."
+  ]
+ }
+}
