@@ -1,9 +1,14 @@
 # Scene flow: Bootstrap, Lair and Raid
 
-**Status: planned, not built.** Approved 2026-10-29 (Decisions, "Design approved: the Lair and the Market in their own
-scene"). Until it is built, the Lair and the Market are rooms inside `Assets/_Project/Scenes/RaidScene.unity`, placed
-by `Assets/_Project/Scripts/Editor/RaidSceneRooms.cs:15-16` at x = 1000 m and 1100 m and joined by `RoomTravel`
-teleports, and no gameplay code loads a scene.
+**Status: built for solo play, co-op not yet checked (2026-10-29, #536).** `SceneSplitTool` split RaidScene into
+`Bootstrap.unity`, `Lair.unity` and `RaidScene.unity`, first in the build in that order. `SceneFlow` (Bootstrap) loads
+the Lair and raid scenes on the host when the server starts, and unloads and reloads the raid scene each time a raid
+ends. Checked solo in the Editor: menu (Bootstrap only), Lair (player at 1005, 1.2, 1.5), set out (63 rooms), return
+(raid scene reloaded, 0 rooms, 0 fracture parts or effects), set out again (63 rooms). Two changes from the plan: the
+campaign manager `LairHubManager` lives in Bootstrap with the raid director (it is data and saves, no room), and the
+Lair and Market rooms keep their 1000 m and 1100 m offsets and stay loaded during a raid, so the two scenes never
+overlap and the Lair is not reloaded each trip. The Ophan Gym and the co-op scripts still use the old combined scene
+(#542).
 
 ## The three scenes
 

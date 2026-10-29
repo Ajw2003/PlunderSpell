@@ -30,8 +30,11 @@ namespace Plunderspell.EditorTools
         public static void Split()
         {
             Scene raid = EditorSceneManager.OpenScene(RaidPath, OpenSceneMode.Single);
+            // Each new scene is saved at once: Unity refuses a second additive new scene beside an unsaved untitled one.
             Scene bootstrap = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
+            EditorSceneManager.SaveScene(bootstrap, BootstrapPath);
             Scene lair = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
+            EditorSceneManager.SaveScene(lair, LairPath);
 
             Move(raid, bootstrap, BootstrapRoots);
             Move(raid, lair, LairRoots);

@@ -23,6 +23,9 @@ namespace Plunderspell.Raid
 
         private void OnEnable()
         {
+            // The Lair scene can load after the game has already entered the Lair (scene split, #539): place on arrival.
+            if (GameServices.GameState != null && GameServices.GameState.CurrentState == GameState.LairRoom)
+                _pending = true;
             EventManager.Instance?.Subscribe(this, (GameStateChanged e) =>
             {
                 if (e.Current == GameState.LairRoom && IsArrival(e.Previous))
