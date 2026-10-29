@@ -76,7 +76,7 @@ async function video(fps) {
 
   const gif = path.join(HERE, 'fatum_cast.gif');
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(fps), '-i', path.join(dir, 'f%04d.jpg'),
-    '-vf', 'fps=12,scale=640:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=160[p];[b][p]paletteuse=dither=bayer:bayer_scale=4',
+    '-vf', 'fps=8,scale=400:-1:flags=lanczos,hqdn3d=4:3:6:4,split[a][b];[a]palettegen=max_colors=64:stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle',
     gif], { stdio: 'inherit' });
   console.log('wrote ' + gif);
 }
