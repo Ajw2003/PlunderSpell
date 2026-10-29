@@ -30,7 +30,11 @@ namespace Plunderspell.Raid
         public ExtractionZone ExtractionZone => _extractionZone;
         public EnemyDirector Alarm => _alarm;
 
-        private void OnEnable() => Current = this;
+        private void OnEnable()
+        {
+            Current = this;
+            RaidDirector.Current?.OnRaidSceneLoaded();
+        }
 
         private void OnDisable()
         {

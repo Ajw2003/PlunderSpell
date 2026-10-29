@@ -111,7 +111,13 @@ namespace Plunderspell.Raid
                 _director.ReturnToLair();
 
             if (_director.Phase == RaidPhase.InLair)
-                _director.StartRaid();
+            {
+                // With the Bootstrap scene's flow, the raid starts once its scene has loaded behind the loading screen (#549).
+                if (SceneFlow.Current != null)
+                    SceneFlow.Current.SetOut();
+                else
+                    _director.StartRaid();
+            }
         }
 
         private void Update()

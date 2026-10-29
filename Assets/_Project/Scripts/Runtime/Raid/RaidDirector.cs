@@ -649,6 +649,17 @@ namespace Plunderspell.Raid
                 _lair = LairHubManager.Current;
         }
 
+        /// <summary>
+        /// A raid scene finished loading on this machine. A client whose host already started the raid builds its castle
+        /// now: the phase can arrive before the scene does (#549).
+        /// </summary>
+        public void OnRaidSceneLoaded()
+        {
+            BindRaidScene();
+            if (isSpawned && !isServer && _phase.value == RaidPhase.Raiding && NeedsClientBuild(Seed))
+                BuildCastle(Seed);
+        }
+
         /// <summary>Lets go of the raid scene's pieces when that scene unloads (scene split, #538).</summary>
         public void UnbindRaidScene()
         {
