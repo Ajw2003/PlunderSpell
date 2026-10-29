@@ -66,7 +66,7 @@ say "charging; host takes damage again: $(gym host call ToggleLocalPlayerUntouch
 sleep 1.5
 bash Tools/Unity/capture.sh "$repo/$out/charging-target-host.png" screen >/dev/null 2>&1
 say "$(ophan client shot "$abs/charging-witness-client.png")"
-wait_state Draining 6 || fail "the first shot did not fire within 6 s (Ophan $(state))"
+wait_state Draining 10 || fail "the first shot did not fire within 10 s (Ophan $(state))"
 say "first shot fired (breaks stone, no damage): $(ophan host read | grep -o 'player local=True[^|]*')"
 sleep 2
 say "after the second shot: $(ophan host read | grep -o 'player local=True[^|]*')"

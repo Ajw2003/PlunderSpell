@@ -243,8 +243,22 @@ namespace Plunderspell.Castle
         /// </summary>
         public void RefreshAfterBreak(Vector3 from, Vector3 to, float radius)
         {
+            System.Collections.IEnumerator steps = RefreshAfterBreakSpread(from, to, radius, float.PositiveInfinity);
+            while (steps.MoveNext()) { }
+        }
+
+        /// <summary>
+        /// <see cref="RefreshAfterBreak"/> spread over frames: yields whenever a frame has spent
+        /// <paramref name="budgetMs"/> on it (all at once on the host cost 20-50 ms; aj's frame pacing, 2026-10-29).
+        /// The rebuild at the end is one step.
+        /// </summary>
+        public System.Collections.IEnumerator RefreshAfterBreakSpread(Vector3 from, Vector3 to, float radius, float budgetMs)
+        {
             if (_grid == null || _data == null)
-                return;
+                yield break;
+            var frame = System.Diagnostics.Stopwatch.StartNew();
+            double totalMs = 0;
+            int frames = 1;
             PhysicsScene physics = Physics.defaultPhysicsScene;
             int firstColumn = _grid.CastleColumn(Mathf.Min(from.x, to.x) - radius), lastColumn = _grid.CastleColumn(Mathf.Max(from.x, to.x) + radius);
             int firstRow = _grid.CastleRow(Mathf.Min(from.z, to.z) - radius), lastRow = _grid.CastleRow(Mathf.Max(from.z, to.z) + radius);
@@ -254,6 +268,7 @@ namespace Plunderspell.Castle
             {
                 for (int column = firstColumn; column <= lastColumn; column++)
                     cleared += ClearBrokenColumn(physics, column, row, from, to, radius);
+                if (frame.Elapsed.TotalMilliseconds >= budgetMs) { totalMs += frame.Elapsed.TotalMilliseconds; frames++; yield return null; frame.Restart(); }
             }
             for (int pass = 0; pass < MaxGrowPasses; pass++)
             {
@@ -262,6 +277,7 @@ namespace Plunderspell.Castle
                 {
                     for (int column = firstColumn; column <= lastColumn; column++)
                         grown += GrowColumn(physics, column, row, from, to, radius);
+                    if (frame.Elapsed.TotalMilliseconds >= budgetMs) { totalMs += frame.Elapsed.TotalMilliseconds; frames++; yield return null; frame.Restart(); }
                 }
                 added += grown;
                 if (grown == 0)
@@ -269,15 +285,21 @@ namespace Plunderspell.Castle
             }
             int holes = LinkHoles(from, to, radius);
             int linksBefore = LinkCount;
+            double scanMs = totalMs + frame.Elapsed.TotalMilliseconds;
+            if (frame.Elapsed.TotalMilliseconds >= budgetMs) { frames++; yield return null; }
+            frame.Restart();
             if (cleared + added + holes > 0)
                 Rebuild();
-            Debug.Log($"[CastleNav] Break refresh: {cleared} cells cleared, {added} added, {holes} wall hole links, links {linksBefore} -> {LinkCount}.");
+            Debug.Log($"[CastleNav] Break refresh: {cleared} cells cleared, {added} added, {holes} wall hole links, links {linksBefore} -> {LinkCount}; " +
+                      $"{(lastColumn - firstColumn + 1) * (lastRow - firstRow + 1)} columns scanned in {scanMs:F1} ms over {frames} frames, rebuild {frame.Elapsed.TotalMilliseconds:F1} ms in one.");
         }
 
         // A cell whose floor is gone (rooms only: a curtain piece stands on the scene's ground) or that the castle now overlaps.
         private int ClearBrokenColumn(PhysicsScene physics, int column, int row, Vector3 from, Vector3 to, float radius)
         {
             int cleared = 0;
+            if (!ColumnNearSegment(column, row, from, to, radius))
+                return 0;
             for (int level = CastleLevels.Lowest; level < CastleLevels.Lowest + CastleLevels.Count; level++)
             {
                 for (int layer = 0; layer < CastleNavTile.Layers; layer++)
@@ -303,6 +325,8 @@ namespace Plunderspell.Castle
         private int GrowColumn(PhysicsScene physics, int column, int row, Vector3 from, Vector3 to, float radius)
         {
             int added = 0;
+            if (!ColumnNearSegment(column, row, from, to, radius))
+                return 0;
             float x = CastleNavGrid.CellCentre(column), z = CastleNavGrid.CellCentre(row);
             for (int direction = 0; direction < 4; direction++)
             {
@@ -395,6 +419,14 @@ namespace Plunderspell.Castle
         private bool IsRoom(int module) => ProceduralCastleGenerator.IsEnclosedRoom(_data.PlacedModules[module].Zone);
 
         // Within range if the cell's floor, middle or head is: a wall breaks at body height, a floor at its own.
+        // Seen from above: a column farther than radius from the line can hold no cell near it, so its probes and casts
+        // are skipped (the scan box around a break held about 800 columns, 20 ms; aj's frame pacing, 2026-10-29).
+        private static bool ColumnNearSegment(int column, int row, Vector3 from, Vector3 to, float radius)
+        {
+            var point = new Vector3(CastleNavGrid.CellCentre(column), 0f, CastleNavGrid.CellCentre(row));
+            return SegmentDistanceSqr(point, new Vector3(from.x, 0f, from.z), new Vector3(to.x, 0f, to.z)) <= radius * radius;
+        }
+
         private static bool NearSegment(Vector3 floor, Vector3 from, Vector3 to, float radius)
         {
             float limit = radius * radius;

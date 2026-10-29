@@ -30,6 +30,8 @@ namespace Plunderspell.Raid
         private const float CutForce = 12f;
         private const float CutStopShort = 2f;
         private const float NavRefreshRadius = 2f;
+        // Milliseconds of the guards' map refresh per frame after a break, so a shot never costs a frame (aj, 2026-10-29).
+        private const float NavRefreshBudgetMs = 2f;
 
         [SerializeField] private OphanTuning _tuning = new OphanTuning();
 
@@ -383,9 +385,9 @@ namespace Plunderspell.Raid
             yield return new WaitForFixedUpdate();
             yield return new WaitForFixedUpdate();
             ProceduralCastleGenerator generator = FindFirstObjectByType<ProceduralCastleGenerator>();
-            var cost = System.Diagnostics.Stopwatch.StartNew();
-            generator?.LastGenerated?.NavGraph?.RefreshAfterBreak(from, to, NavRefreshRadius);
-            Debug.Log($"[Ophan] nav refresh after the break in {cost.Elapsed.TotalMilliseconds:F1} ms");
+            CastleNavGraph graph = generator?.LastGenerated?.NavGraph;
+            if (graph != null)
+                yield return graph.RefreshAfterBreakSpread(from, to, NavRefreshRadius, NavRefreshBudgetMs);
         }
 
         [ObserversRpc]
