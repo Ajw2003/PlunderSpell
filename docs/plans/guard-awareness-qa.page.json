@@ -6,38 +6,38 @@
   "base": "8f15b2d2",
   "unverified": [
    "Nobody has played the new guards by hand yet.",
-   "My recordings show the host's camera, which mostly faces a wall, so the clips show less than the logs do. Play it yourself to judge.",
-   "In the floor-hole run after the changes, the guard ran off to a place it remembered from the scenario before, so that case is not shown working.",
-   "A guard hunting a lost player stops after 40 quiet seconds even when it is close. That cap is mine, not from the design.",
+   "My recordings show only the host's camera, which mostly faces a wall, so the clips show less than the logs do. Play it yourself to judge.",
+   "In the floor-hole run after the changes, the guard ran off to a place it remembered from the previous scenario, so that case is not shown working.",
+   "A guard hunting a player it has lost stops after 40 quiet seconds, even when it is close. I chose that cap; it is not in the design.",
    "Three stair-climbing guard tests (GuardClimbsTheStairToItsGallery) failed before this work and still fail."
   ],
   "files": {}
  },
  "short": {
-  "lead": "Every guard pick you approved is built and pushed, and all 569 play-mode tests pass. I recorded the five playtest scenarios in co-op before and after. Each item shows both; the logs say more than the pictures, so the sentence under each one is what the log recorded.",
-  "hint": "Start the gym with the command in Start, then try each item.",
+  "lead": "Every guard pick you approved is built and pushed, and all 569 play-mode tests pass. I recorded the five playtest scenarios in co-op, before and after the changes. Each item shows both. The logs say more than the pictures, so the sentence under each item is what the log recorded.",
+  "hint": "Run the command in the Start item to open the gym, then try each item.",
   "key": [["Seen in my recording", "done"], ["You play it", "you"]],
   "items": [
    ["play", "Start", "Open the Ophan Gym in co-op", "you", "In Git Bash, from C:\\Users\\aj\\Desktop\\GameDev\\PlunderSpell\\.claude\\worktrees\\guard-deep-dive-0031e3, run: bash Tools/Unity/coop_local.sh --gym. You should see \"Co-op on this PC is up\". F8 stops damage to you; F9 removes the guards.", "Run it once; every item below uses this session."],
-   ["eye", "Beside", "A guard 2 m beside you sees you", "you", "Before: the guard stood 2 m to your side and never noticed you. After: it saw you within a second and attacked (Combat at 1.0 s). Walk up beside a guard at a wall.", "Say whether it feels fair.", {"src": "../generated/guard-awareness-qa/beside-after.jpg", "alt": "Four frames of the after run, beside scenario", "caption": "After. Before: ../generated/guard-awareness-qa/beside-before.jpg; clips beside-before.mp4 and beside-after.mp4."}],
-   ["eye", "Spot", "A guard at a checked spot looks round", "you", "Before: the guard walked to the spot and stared at the wall. After: it turned, found you 9 m behind, chased and fought (Combat at 1.0 s, then Chase, then Investigate when it lost you). Make a noise, then stand behind where the guard will stop.", "Say whether it looks round enough.", {"src": "../generated/guard-awareness-qa/spot-after.jpg", "alt": "Four frames of the after run, spot scenario", "caption": "After. Before: spot-before.jpg; clips spot-before.mp4 and spot-after.mp4."}],
-   ["loop", "Pillar", "A chase broken off behind cover", "you", "Before: the guard gave up within 1.4 s and went back to patrol. After: I hid you 20 m away out of its sight; it went to where it last saw you, found you, and fought for 10 more seconds. Break line of sight and run a room or two.", "Say whether it hunts long enough, or too long.", {"src": "../generated/guard-awareness-qa/pillar-after.jpg", "alt": "Four frames of the after run, pillar scenario", "caption": "After. Before: pillar-before.jpg; clips pillar-before.mp4 and pillar-after.mp4."}],
-   ["hand", "Trio", "Three melee guards on one player", "you", "Before: they took turns, one swinging at a time. After: two swing at once and the third waits; guards chase at 5.5 m/s. Let three guards reach you.", "Say whether that is too much.", {"src": "../generated/guard-awareness-qa/trio-after.jpg", "alt": "Four frames of the after run, trio scenario", "caption": "After. Before: trio-before.jpg; clips trio-before.mp4 and trio-after.mp4."}],
-   ["hammer", "Hole", "A guard and you either side of a beam hole", "you", "Before: the guard walked round the hole and reached you in 7 s. After: inconclusive; the guard went to an older lead instead. Have the Ophan break a floor (F7), then stand across the hole from a guard.", "Say whether it goes round, or holds and throws."]
+   ["eye", "Beside", "A guard 2 m beside you sees you", "you", "Before: the guard stood 2 m to your side and never noticed you. After: it saw you within a second and attacked (it entered the Combat state at 1.0 s). Walk up beside a guard at a wall.", "Say whether it feels fair.", {"src": "../generated/guard-awareness-qa/beside-after.jpg", "alt": "Four frames of the after run, beside scenario", "caption": "After. Before: ../generated/guard-awareness-qa/beside-before.jpg; clips beside-before.mp4 and beside-after.mp4."}],
+   ["eye", "Spot", "A guard at a checked spot looks round", "you", "Before: the guard walked to the spot and stared at the wall. After: it turned, found you 9 m behind it, chased you and fought you (states: Combat at 1.0 s, then Chase, then Investigate when it lost you). Make a noise, then stand behind where the guard will stop.", "Say whether it looks round enough.", {"src": "../generated/guard-awareness-qa/spot-after.jpg", "alt": "Four frames of the after run, spot scenario", "caption": "After. Before: spot-before.jpg; clips spot-before.mp4 and spot-after.mp4."}],
+   ["loop", "Pillar", "A chase broken off behind cover", "you", "Before: the guard gave up within 1.4 s and went back to patrol. After: I hid you 20 m away, out of its sight. The guard went to where it last saw you, found you, and fought you for 10 more seconds. Break line of sight and run a room or two.", "Say whether it hunts long enough, or too long.", {"src": "../generated/guard-awareness-qa/pillar-after.jpg", "alt": "Four frames of the after run, pillar scenario", "caption": "After. Before: pillar-before.jpg; clips pillar-before.mp4 and pillar-after.mp4."}],
+   ["hand", "Trio", "Three melee guards on one player", "you", "Before: the three guards took turns, with one swinging at a time. After: two swing at once and the third waits. Guards also chase at 5.5 m/s. Let three guards reach you.", "Say whether that is too much.", {"src": "../generated/guard-awareness-qa/trio-after.jpg", "alt": "Four frames of the after run, trio scenario", "caption": "After. Before: trio-before.jpg; clips trio-before.mp4 and trio-after.mp4."}],
+   ["hammer", "Hole", "A guard and you either side of a beam hole", "you", "Before: the guard walked round the hole and reached you in 7 s. After: the run was inconclusive, because the guard went to a spot it was already checking instead. Press F7 to have the Ophan break a floor, then stand across the hole from a guard.", "Say whether it goes round, or holds and throws."]
   ]
  },
  "changes": [
-  ["chg", "Routes (#481)", "No route: the long way round, or hold below and throw.", null, "ChaseState, InvestigateState, GuardNearestReachableWalk; HoldBelow now steps back into view.", null],
-  ["chg", "Sight (#482, #484, #486)", "Only castle stone blocks sight; three-layer cone; 31.5 m calm range.", null, "GuardSight, GuardSightBlockers, GuardSightCone, GuardSideNotice.", null],
-  ["chg", "Hearing (#483, #485, #486)", "Turn toward sounds, look round, hear through doorways, 1.5 times range.", null, "GuardLookAround, GuardSoundApproach, GuardLeads, NoiseBroadcaster.", null],
-  ["chg", "Memory (#487)", "Back to patrol only after 8 quiet seconds and 3 rooms away.", null, "GuardLastKnown.", null],
-  ["chg", "Push (#488)", "Chase 5.5 m/s, alarm speed bonus on every move, two melee swings at once.", null, "GuardTuning, GuardNavigator, AttackTurnTuning, prefabs and scenes.", null]
+  ["chg", "Routes (#481)", "When there is no route to you, the guard takes the long way round, or holds below and throws.", null, "ChaseState, InvestigateState, GuardNearestReachableWalk; HoldBelow now steps back into view.", null],
+  ["chg", "Sight (#482, #484, #486)", "Only castle stone blocks sight. The vision cone has three layers. Calm range is 31.5 m.", null, "GuardSight, GuardSightBlockers, GuardSightCone, GuardSideNotice.", null],
+  ["chg", "Hearing (#483, #485, #486)", "Guards turn toward sounds, look round, hear through doorways, and hear at 1.5 times the range.", null, "GuardLookAround, GuardSoundApproach, GuardLeads, NoiseBroadcaster.", null],
+  ["chg", "Memory (#487)", "The guard goes back to patrol only after 8 quiet seconds, and only once your last-known spot is 3 rooms from it.", null, "GuardLastKnown.", null],
+  ["chg", "Push (#488)", "Chase speed is 5.5 m/s, the alarm speed bonus applies to every move, and two melee swings can happen at once.", null, "GuardTuning, GuardNavigator, AttackTurnTuning, prefabs and scenes.", null]
  ],
  "wrapup": {
   "summary": "Guard awareness is built, tested and recorded; it needs your hand test.",
   "changing": "Guard sight, hearing, memory, speed and routing.",
   "blocking": "Your QA pass, and your call on the OphanGym.unity merge conflict.",
-  "next": "Merge into AjsAgent/gym-with-demand-page once you choose how to settle the OphanGym.unity conflict.",
+  "next": "Merge into AjsAgent/gym-with-demand-page once you choose how to settle the OphanGym.unity merge conflict.",
   "todo": ["Play each item.", "Tap <b>Copy my reply</b>.", "Send it with pass or fail per item."]
  }
 }
