@@ -91,7 +91,8 @@ namespace Plunderspell.UI
             if (bus == null)
                 return;
 
-            bus.Subscribe(this, (RaidPhaseChanged e) => { _phase = e.Phase; Assemble(); });
+            // A new phase can mean a new raid scene: Refresh rebinds the zone and the alarm and rereads them (#550).
+            bus.Subscribe(this, (RaidPhaseChanged e) => { Refresh(); _phase = e.Phase; Assemble(); });
             bus.Subscribe(this, (ExtractionTimerChanged e) => { _time = e.SecondsRemaining; Assemble(); });
             bus.Subscribe(this, (WatchRaised e) => { _watchUp = e.Up; Assemble(); });
             bus.Subscribe(this, (GrimoireOpened e) => { _grimoireOpen = e.Open; Assemble(); });
@@ -134,6 +135,10 @@ namespace Plunderspell.UI
         /// <summary>Reads every source and assembles the model. Run once on enable and by <see cref="Build"/>; events keep it current after.</summary>
         public void Refresh()
         {
+            // The HUD lives in the Bootstrap scene; the zone and the alarm come and go with the raid scene (#550).
+            RaidSceneContents raid = RaidSceneContents.Current;
+            if (_extractionZone == null && raid != null) _extractionZone = raid.ExtractionZone;
+            if (_alarm == null && raid != null) _alarm = raid.Alarm;
             _phase = _director != null ? _director.Phase : RaidPhase.InLair;
             _time = _extractionZone != null ? _extractionZone.TimeRemaining : 0f;
             _timeTotal = _extractionZone != null ? _extractionZone.RaidLength : 0f;

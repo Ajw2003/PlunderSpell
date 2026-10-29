@@ -18,36 +18,43 @@ namespace Plunderspell.Tests.Editor
     /// </summary>
     public class AuthoredRaidSceneTests
     {
-        private const string k_ScenePath = "Assets/_Project/Scenes/RaidScene.unity";
+        // The game runs on three scenes since the split (#536): the checks look across all of them.
+        private const string k_ScenePath = "Bootstrap, Lair and RaidScene";
+        private static readonly string[] k_ScenePaths =
+        {
+            "Assets/_Project/Scenes/Bootstrap.unity",
+            "Assets/_Project/Scenes/Lair.unity",
+            "Assets/_Project/Scenes/RaidScene.unity",
+        };
         private const string k_PlayerPrefabPath = "Assets/_Project/Prefabs/RaidPlayer.prefab";
 
-        private Scene m_scene;
+        private readonly System.Collections.Generic.List<Scene> m_scenes = new System.Collections.Generic.List<Scene>();
 
         [SetUp]
         public void SetUp()
         {
-            m_scene = EditorSceneManager.OpenScene(k_ScenePath, OpenSceneMode.Additive);
+            foreach (string path in k_ScenePaths)
+                m_scenes.Add(EditorSceneManager.OpenScene(path, OpenSceneMode.Additive));
         }
 
         [TearDown]
         public void TearDown()
         {
-            if (m_scene.IsValid())
-            {
-                EditorSceneManager.CloseScene(m_scene, true);
-            }
+            foreach (Scene scene in m_scenes)
+                if (scene.IsValid())
+                    EditorSceneManager.CloseScene(scene, true);
+            m_scenes.Clear();
         }
 
         private T Find<T>() where T : Object
         {
-            foreach (GameObject root in m_scene.GetRootGameObjects())
-            {
-                var found = root.GetComponentInChildren<T>(true);
-                if (found != null)
+            foreach (Scene scene in m_scenes)
+                foreach (GameObject root in scene.GetRootGameObjects())
                 {
-                    return found;
+                    var found = root.GetComponentInChildren<T>(true);
+                    if (found != null)
+                        return found;
                 }
-            }
 
             return null;
         }
@@ -133,24 +140,27 @@ namespace Plunderspell.Tests.Editor
             var director = Find<RaidDirector>();
             Assert.IsNotNull(director, $"{k_ScenePath} has no RaidDirector.");
 
-            var serialized = new SerializedObject(director);
-            foreach (string field in new[]
-                     {
-                         "_generator", "_lootSpawner", "_guardSpawner", "_extractionZone",
-                         "_lair", "_alarm",
-                     })
+            // The director (Bootstrap) keeps the Lair; it takes the raid scene's pieces from RaidSceneContents (#538).
+            Assert.IsNotNull(new SerializedObject(director).FindProperty("_lair").objectReferenceValue,
+                "RaidDirector._lair is unassigned in the authored scene.");
+
+            var contents = Find<RaidSceneContents>();
+            Assert.IsNotNull(contents, $"{k_ScenePath} has no RaidSceneContents, so the director finds no castle.");
+            var serialized = new SerializedObject(contents);
+            foreach (string field in new[] { "_generator", "_lootSpawner", "_guardSpawner", "_extractionZone", "_alarm" })
             {
                 SerializedProperty property = serialized.FindProperty(field);
-                Assert.IsNotNull(property, $"RaidDirector has no field {field}.");
+                Assert.IsNotNull(property, $"RaidSceneContents has no field {field}.");
                 Assert.IsNotNull(property.objectReferenceValue,
-                    $"RaidDirector.{field} is unassigned in the authored scene.");
+                    $"RaidSceneContents.{field} is unassigned in the raid scene.");
             }
 
             var presenter = Find<RaidHudPresenter>();
             Assert.IsNotNull(presenter, $"{k_ScenePath} has no RaidHudPresenter.");
 
             var hud = new SerializedObject(presenter);
-            foreach (string field in new[] { "_director", "_extractionZone", "_alarm", "_lair" })
+            // The zone and the alarm are in the raid scene; the HUD takes them from RaidSceneContents (#550).
+            foreach (string field in new[] { "_director", "_lair" })
             {
                 SerializedProperty property = hud.FindProperty(field);
                 Assert.IsNotNull(property, $"RaidHudPresenter has no field {field}.");
