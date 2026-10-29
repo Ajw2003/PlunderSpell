@@ -280,7 +280,7 @@ const PAGE = {
   "eyebrow": "Design for approval · prototype built, no game code yet",
   "approval": "Design approved: Fatum",
   "short": {
-    "lead": "Fatum is a boss-only, end-game spell and an homage to Doom in Mage Arena. A small red-black orb rises over the boss, tears open into a red black hole that drags everything toward it for 9 seconds, swallows the light and the sound, then collapses onto the boss. The prototype below is a 21-second animation with its own sound; nothing has been added to the game yet.",
+    "lead": "Fatum is a boss-only, end-game spell, an homage to the Doom spell in the game Mage Arena. A small red-black orb rises over the boss, then tears open into a black hole ringed in red that drags everything toward it for 9 seconds, swallows the light and the sound, then collapses onto the boss. The prototype below is a 21-second animation with its own sound; nothing has been added to the game yet.",
     "hint": "Tap a step to see what it gives you and what it needs from you.",
     "key": [
       [
@@ -324,8 +324,8 @@ const PAGE = {
         "Reuses",
         "What it reuses, and what is missing",
         "",
-        "It plugs into the spell pipeline that already exists: a new SpellId, one ISpellEffect class, one registry line, and a new look for SpellVfxDirector. Damage goes through Damage.Apply like every other hit, so the numbers, flashes and blame already work. The pull reuses the force code Levo and Velox use.",
-        "Nothing is marked as a boss in the game yet. The Gilded Colossus is roadmap item #43 (\"The Gilded Colossus as a real vault boss\"). The spell needs a small \"this is a boss\" marker, which that work would also use."
+        "It plugs into the spell pipeline that already exists: a new SpellId, one ISpellEffect class, one registry line, and a new look for SpellVfxDirector. Damage goes through Damage.Apply like every other hit, so the numbers, flashes and blame already work. The pull reuses the force code that Levo and Velox already use.",
+        "Nothing is marked as a boss in the game yet. The Gilded Colossus is roadmap item #43 (\"The Gilded Colossus as a real vault boss\"). The spell needs a small \"this is a boss\" marker, and the Gilded Colossus work would use that marker too."
       ],
       [
         "hand",
@@ -385,7 +385,7 @@ const PAGE = {
     [
       "new",
       "3. The Maw opens (5–14 s)",
-      "A red black hole above the boss pulls everything in and crushes it.",
+      "A black hole ringed in red hangs above the boss, pulls everything in and crushes it.",
       null,
       "The lowest toll and a boom. A black disc ringed in red light, with a glowing disk around it and light bending around its edge. Loot, guards and anyone standing on the ground are dragged toward it. The boss is lifted, stretched and cracked, taking damage on every heartbeat. Torches turn red. As in Mage Arena, a player who touches the centre dies, and getting off the ground (Saltus, Levo) is the way out.",
       [
@@ -447,7 +447,7 @@ const PAGE = {
       "Prototype files",
       "Everything that made this page is in docs/plans/doom-spell/.",
       null,
-      "prototype.js draws the scene with one WebGL shader. capture.js records it in headless Chromium: \"node docs/plans/doom-spell/capture.js stills\" or \"... video 24\". compose_sound.py builds the sound. The stills, the GIF and the MP4 are committed with them.",
+      "prototype.js draws the scene with one WebGL shader. capture.js records it in headless Chromium: \"node docs/plans/doom-spell/capture.js stills\" or \"... video 24\" (24 frames per second). compose_sound.py builds the sound. The stills, the GIF and the MP4 are committed with them.",
       [
         "Nothing.",
         "A prototype that can be re-recorded after any change.",
@@ -465,7 +465,7 @@ const PAGE = {
           "A",
           "Fatum",
           1,
-          "Latin for fate or doom, so it fits the Latin-ish word list (Ignis, Frango, Somnus). Two clear syllables are easy for the voice recogniser."
+          "Latin for fate or doom, so it fits the Latin word list (Ignis, Frango, Somnus). Two clear syllables are easy for the voice recogniser."
         ],
         [
           "B",
@@ -502,7 +502,7 @@ const PAGE = {
           "C",
           "It only works inside a boss arena",
           0,
-          "The simplest rule, but it needs arenas, which do not exist yet (#43)."
+          "The simplest rule, but it needs boss arenas, which do not exist yet (roadmap item #43, the Gilded Colossus as a real vault boss)."
         ]
       ],
       "A keeps it special and stops it from replacing every other spell."
@@ -515,7 +515,7 @@ const PAGE = {
           "A",
           "A finisher",
           1,
-          "The hole crushes about a third of the boss's health; if the boss is low enough when it collapses, the boss dies. This is what the prototype shows."
+          "The hole crushes about a third of the boss's health, and if the boss's health is low enough when the hole collapses, the boss dies. This is what the prototype shows."
         ],
         [
           "B",
@@ -587,7 +587,7 @@ const PAGE = {
     "summary": "A boss-only Doom spell, prototyped as a 21-second animation with its own sound; no game code yet.",
     "changing": "Nothing in the game changes until you approve. The prototype, the sound, its build scripts and this page are added in docs/plans/doom-spell/, and docs/page-style.json is drafted from the design system.",
     "blocking": "Your five picks and your approval.",
-    "next": "I file a parent GitHub issue with one child issue per step, then build Fatum in Unity: a boss marker, the spell and its misfire, its visual effect, the sound in AudioForge, tests, and a Combat Bench run with screenshots for you to QA.",
+    "next": "I file a parent GitHub issue with one child issue per step, then build Fatum in Unity: a boss marker, the spell and its misfire, its visual effect, the sound in AudioForge (the repo tool that builds every game sound), tests, and a run in the Combat Bench (the one-room arena for trying a spell or enemy without a raid) with screenshots for you to QA.",
     "todo": [
       "Watch fatum_cast.mp4 with sound on.",
       "Pick your answers (Choices).",
