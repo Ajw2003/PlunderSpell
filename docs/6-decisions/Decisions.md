@@ -3,6 +3,20 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-29 — One scene at a time, behind a loading screen
+
+**Status.** Decided by the owner: "get rid of them don't keep them loaded they only exist in the scene they belong in
+and we add a loading screen to mask any hitches or freezes". Supersedes pick 2A of "Design approved: the Lair and the
+Market in their own scene" (the next raid loaded in the background in the Lair) and the agent's change that kept the
+Lair loaded during a raid.
+
+**Decision.** Only one of the Lair scene and the raid scene is loaded at a time, on top of Bootstrap. Setting out
+unloads the Lair scene and loads the raid scene; returning unloads the raid scene and loads the Lair scene. A loading
+screen covers each change.
+
+**Why.** Keeping the Lair loaded during a raid gained nothing but avoiding a load on return, and left the Lair's objects
+running 1000 m away; a loading screen hides the load instead.
+
 ## 2026-10-29 — Design approved: no debt, no purses; wealth is loot
 
 **Status.** Decided by the owner: "Design approved: no debt 1* 2A 3A" (plan page `docs/plans/no-debt-no-purses.html`),
