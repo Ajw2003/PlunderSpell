@@ -19,7 +19,7 @@ namespace Plunderspell.Tests.Editor
         [SetUp]
         public void SetUp()
         {
-            _tuning = new OphanTuning();
+            _tuning = ScriptableObject.CreateInstance<OphanTuning>();
             _hunt = new OphanHunt(_tuning);
         }
 
@@ -55,12 +55,13 @@ namespace Plunderspell.Tests.Editor
         }
 
         [Test]
-        public void Test_TheSlowBeamKillsSomeoneInTheOpenInFourSeconds()
+        public void Test_TheSlowBeamDrainsAtItsTunedRate()
         {
+            // The rate is the owner's to tune (25 a second at #418, 10 on 2026-10-29): check the drain follows it.
             ToDraining();
             float drained = Run(4f).drain;
-            Assert.That(drained, Is.EqualTo(100f).Within(_tuning.SlowBeamDamagePerSecond * _tuning.DamageStepSeconds),
-                "25 health a second takes a full 100 in about 4 seconds.");
+            Assert.That(drained, Is.EqualTo(_tuning.SlowBeamDamagePerSecond * 4f).Within(_tuning.SlowBeamDamagePerSecond * _tuning.DamageStepSeconds),
+                "Four seconds in the open drain four seconds' worth of the tuned rate.");
         }
 
         [Test]

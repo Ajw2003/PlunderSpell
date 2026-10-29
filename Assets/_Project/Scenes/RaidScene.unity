@@ -194,20 +194,6 @@ MonoBehaviour:
   _parent: {fileID: 0}
   _invertedPathToNearestParent: 
   _directChildren: []
-  _tuning:
-    Scale: 150
-    Distance: 900
-    Elevation: 30
-    ArriveSeconds: 4
-    LeaveSeconds: 4
-    LockSeconds: 3
-    SlowBeamDamagePerSecond: 25
-    DamageStepSeconds: 0.2
-    CoverSecondsBeforeCharge: 3
-    ChargeSeconds: 3
-    SecondShotDelaySeconds: 4
-    ChargeCooldownSeconds: 10
-    ChargedBeamDamage: 25
   _huntEveryRaid: 1
   _stoneMask:
     serializedVersion: 2

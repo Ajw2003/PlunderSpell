@@ -24,16 +24,13 @@ namespace Plunderspell.Raid
     public sealed class OphanOfHours : NetworkBehaviour
     {
         public const string PrefabResource = "Fear/TheOphanOfHours";
-        private const float RepickSeconds = 1f;
         private const float TakeDespawnDelaySeconds = 1f;
-        private const float CutRadius = 1.5f;
-        private const float CutForce = 12f;
-        private const float CutStopShort = 2f;
         private const float NavRefreshRadius = 2f;
         // Milliseconds of the guards' map refresh per frame after a break, so a shot never costs a frame (aj, 2026-10-29).
         private const float NavRefreshBudgetMs = 2f;
 
-        [SerializeField] private OphanTuning _tuning = new OphanTuning();
+        // One asset for every scene (audit D2, #527); the scenes no longer keep their own copy.
+        private OphanTuning _tuning => OphanTuning.Default;
 
         [Tooltip("Test switch until the demand (#419) exists: every raid is hunted. Off, the Ophan never comes.")]
         [SerializeField] private bool _huntEveryRaid = true;
@@ -127,7 +124,7 @@ namespace Plunderspell.Raid
             {
                 PlayerStateMachine before = _target;
                 Repick();
-                _repickIn = RepickSeconds;
+                _repickIn = _tuning.RepickSeconds;
                 if (_target != before)
                     _hunt.Retarget();
             }
@@ -316,7 +313,7 @@ namespace Plunderspell.Raid
 
         /// <summary>
         /// The charged beam on every machine: one ray along the look finds where it first meets stone (the burst),
-        /// then one sphere cast of <see cref="CutRadius"/> along the same line decides what breaks.
+        /// then one sphere cast of <see cref="OphanTuning.CutRadius"/> along the same line decides what breaks.
         /// </summary>
         [ObserversRpc]
         private void ShowCharged(Vector3 eye, Vector3 at)
@@ -337,9 +334,9 @@ namespace Plunderspell.Raid
 
             // 2. One sphere cast along the same line: everything inside the beam's radius breaks.
             // Stops short of the aim so the floor under the target is never broken.
-            float reach = Mathf.Max(0f, length - CutStopShort);
+            float reach = Mathf.Max(0f, length - _tuning.CutStopShort);
             Vector3 cutEnd = eye + dir * reach;
-            int count = Physics.SphereCastNonAlloc(eye, CutRadius, dir, _cutHits, reach, _stoneMask, QueryTriggerInteraction.Ignore);
+            int count = Physics.SphereCastNonAlloc(eye, _tuning.CutRadius, dir, _cutHits, reach, _stoneMask, QueryTriggerInteraction.Ignore);
 
             var cost = System.Diagnostics.Stopwatch.StartNew();
             var broken = new HashSet<FracturableObject>();
@@ -358,7 +355,7 @@ namespace Plunderspell.Raid
                 if (part != null && broken.Add(part))
                 {
                     part.groundY = GroundY(piece, part.transform);
-                    part.HitAlongLine(eye, cutEnd, CutRadius, CutForce);
+                    part.HitAlongLine(eye, cutEnd, _tuning.CutRadius, _tuning.CutForce);
                     if (part.TryGetComponent(out Renderer partRenderer))
                     {
                         Bounds b = brokenArea ?? partRenderer.bounds;
