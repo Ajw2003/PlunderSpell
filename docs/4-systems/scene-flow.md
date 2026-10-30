@@ -5,7 +5,11 @@
 of its own, rebuilt from RaidScene and loaded in its place when the co-op launcher sets SceneFlow's override. `SceneFlow`
 (Bootstrap) keeps exactly one of the Lair and the raid scene loaded (Decisions, "One scene at a time, behind a loading
 screen"): setting out unloads the Lair and loads a fresh raid scene, a raid ending unloads it and loads the Lair. Each
-machine keeps its loading screen up until its own castle is built or it is in the Lair. Co-op run `split-2` (Editor
+machine keeps its loading screen up until its own castle is built or it is in the Lair. The screen fades in over
+0.2 s in the scene being left, and nothing unloads until every machine has confirmed its screen is up (3 s timeout,
+logged); it holds 0.4 s in the new scene, then fades out over 0.4 s (`SceneFlow.CoverUntilReady`). Before this,
+an observers RPC that PurrNet does not run at once on the host let a frame of empty scene show (aj's clip,
+2026-10-29). Co-op run `split-2` (Editor
 host, built client): both machines built the same castle (63 rooms, 246 breakable parts), and after the return both
 had 0 rooms, 0 parts and 0 debris effects. `LairHubManager` (campaign data and saves) lives in Bootstrap with the raid
 director. A client is built from the whole build list, because PurrNet names scenes by build index.

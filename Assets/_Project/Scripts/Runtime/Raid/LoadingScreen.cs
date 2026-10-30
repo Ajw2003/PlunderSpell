@@ -14,6 +14,20 @@ namespace Plunderspell.Raid
 
         public static bool IsShowing => s_root != null && s_root.activeSelf;
 
+        /// <summary>How opaque the card is, for fading it in and out.</summary>
+        public static float Alpha
+        {
+            get => s_group != null ? s_group.alpha : 0f;
+            set
+            {
+                if (s_root == null)
+                    Build();
+                s_group.alpha = value;
+            }
+        }
+
+        private static CanvasGroup s_group;
+
         public static void Show()
         {
             if (s_root == null)
@@ -31,6 +45,7 @@ namespace Plunderspell.Raid
         {
             s_root = new GameObject("LoadingScreen");
             Object.DontDestroyOnLoad(s_root);
+            s_group = s_root.AddComponent<CanvasGroup>();
             var canvas = s_root.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.sortingOrder = short.MaxValue;
