@@ -52,8 +52,17 @@ namespace Plunderspell.Raid
             EventManager.Instance?.Subscribe(this, (CoopChanged e) => OnCoopChanged());
             EventManager.Instance?.Subscribe(this, (RaidPhaseChanged e) => OnPhaseChanged(e.Phase));
             EventManager.Instance?.Subscribe(this, (SessionEnding e) => SaveIfLive());
-            // The server may have started before this object was enabled.
-            OnCoopChanged();
+            // The server may have started before this object was enabled. Pieces can only be spawned once PurrNet
+            // tracks this scene, a moment after it loads (the Lair scene is loaded by SceneFlow, #541).
+            StartCoroutine(WhenSceneTracked(OnCoopChanged));
+        }
+
+        private System.Collections.IEnumerator WhenSceneTracked(System.Action then)
+        {
+            NetworkManager network = NetworkManager.main;
+            while (network != null && network.sceneModule != null && !network.sceneModule.TryGetSceneID(gameObject.scene, out _))
+                yield return null;
+            then();
         }
 
         private void OnDisable()
@@ -96,6 +105,19 @@ namespace Plunderspell.Raid
 
         // Pieces spawned before the server runs would not be networked, so wait for it.
         private static bool ServerReady() => NetworkManager.main == null || NetworkManager.main.isServer;
+
+        /// <summary>
+        /// Puts an extracted haul straight into the saved pile when the Lair scene is not loaded (it is unloaded during a
+        /// raid, #541): the pieces have no pose yet, so the Lair lays them out on the grid when it next restores the pile.
+        /// </summary>
+        public static void SaveWithoutLanding(IReadOnlyList<LootItem> pieces)
+        {
+            var entries = new List<HaulPileEntry>(HaulPileSave.LoadEntries(SaveSlots.Active));
+            foreach (LootItem piece in pieces)
+                if (piece != null)
+                    entries.Add(new HaulPileEntry(piece.name));
+            HaulPileSave.SaveEntries(SaveSlots.Active, entries);
+        }
 
         /// <summary>Takes a piece out of the pile (picked up for the Market, sold) and saves.</summary>
         public void Remove(GameObject piece)

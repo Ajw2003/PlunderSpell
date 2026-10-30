@@ -151,6 +151,12 @@ namespace Plunderspell.Raid
                 EventManager.Instance?.Subscribe(this, (PurseChanged e) => PublishCampaign());
                 EventManager.Instance?.Subscribe(this, (PresentChanged e) => PublishCampaign());
                 EventManager.Instance?.Subscribe(this, (AgeChosen e) => PublishCampaign()); // the century dial
+                // The Lair scene, with the haul landing, is unloaded during a raid: the haul goes into the saved pile (#541).
+                EventManager.Instance?.Subscribe(this, (HaulExtracted e) =>
+                {
+                    if (HaulLanding.Current == null)
+                        HaulLanding.SaveWithoutLanding(e.Pieces);
+                });
                 PublishCampaign();
             }
             else
@@ -177,6 +183,7 @@ namespace Plunderspell.Raid
                 EventManager.Instance?.Unsubscribe<PurseChanged>(this);
                 EventManager.Instance?.Unsubscribe<PresentChanged>(this);
                 EventManager.Instance?.Unsubscribe<AgeChosen>(this);
+                EventManager.Instance?.Unsubscribe<HaulExtracted>(this);
             }
             _hostEra.onChanged -= OnHostEraReplicated;
 
