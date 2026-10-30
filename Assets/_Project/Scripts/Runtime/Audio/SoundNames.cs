@@ -117,6 +117,8 @@ namespace Plunderspell.Audio
         public const string ExtractSuccess = "sting_extract_success";
         public const string PlayerDownSting = "sting_player_down";
         public const string PortalOpened = "sting_portal_opened";
-        public const string PortalWarning = "sting_portal_warning";
+        public const string PortalCollapse = "sfx_portal_collapse";
+        public const string PortalHum = "amb_portal_loop";
+        public const string PortalWarning= "sting_portal_warning";
     }
 }

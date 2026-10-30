@@ -99,8 +99,10 @@ namespace Plunderspell.Audio
             EventManager.Instance?.Subscribe(this, (CastResolved e) => OnCastResolved(e.Report));
             EventManager.Instance?.Subscribe(this, (DamageDealt e) => OnDamageDealt(e.Report));
             EventManager.Instance?.Subscribe(this, (PortalOpened e) => OnPortalOpened(e.Point));
+            EventManager.Instance?.Subscribe(this, (PortalStateChanged e) => OnPortalStateChanged(e.State, e.FloorPoint));
             EventManager.Instance?.Subscribe(this, (HaulInZoneChanged e) => OnHaulChanged(e.Worth, e.Pieces));
             EventManager.Instance?.Subscribe(this, (ExtractionResolved e) => OnExtractionResolved(e.Worth, e.Saved));
+            EventManager.Instance?.Subscribe(this, (RaidPhaseChanged e) => { if (e.Phase != RaidPhase.Raiding) StopPortalHum(); });
             // The player-down sting stands in until the turn has its own sound (#417).
             EventManager.Instance?.Subscribe(this, (GuardTurned e) => Play(SoundNames.PlayerDownSting, ListenerPosition));
         }
@@ -343,6 +345,57 @@ namespace Plunderspell.Audio
         }
 
         private void OnPortalOpened(Vector3 point) => Play(SoundNames.PortalOpened, Vector3.zero);
+
+        private void OnPortalStateChanged(PortalState state, Vector3 floorPoint)
+        {
+            if (state == PortalState.Closed)
+            {
+                StopPortalHum();
+                Play(SoundNames.PortalCollapse, floorPoint);
+            }
+            else if (state == PortalState.Escape)
+            {
+                Play(SoundNames.PortalOpened, Vector3.zero);
+                StartPortalHum(floorPoint);
+            }
+        }
+
+        // The hidden escape portal is found by ear: its hum carries faintly up to 60 m and grows close up (aj, pick 1A, #554).
+        private const float PortalHumMaxDistance = 60f;
+        private const float PortalHumMinDistance = 3f;
+        private AudioSource _portalHum;
+
+        private void StartPortalHum(Vector3 floorPoint)
+        {
+            if (_bank == null || !_bank.TryGet(SoundNames.PortalHum, out SoundEntry entry) || entry.Clips == null || entry.Clips.Length == 0)
+            {
+                Debug.LogWarning("[Audio] No portal hum in the SoundBank; the escape portal is silent.");
+                return;
+            }
+            if (_portalHum == null)
+            {
+                var go = new GameObject("PortalHum");
+                go.transform.SetParent(transform, false);
+                _portalHum = go.AddComponent<AudioSource>();
+                _portalHum.playOnAwake = false;
+            }
+            _portalHum.clip = entry.Clips[0];
+            _portalHum.outputAudioMixerGroup = entry.Group;
+            _portalHum.loop = true;
+            _portalHum.volume = entry.Volume;
+            _portalHum.spatialBlend = 1f;
+            _portalHum.rolloffMode = AudioRolloffMode.Logarithmic;
+            _portalHum.minDistance = PortalHumMinDistance;
+            _portalHum.maxDistance = PortalHumMaxDistance;
+            _portalHum.transform.position = floorPoint + Vector3.up * 1.5f;
+            _portalHum.Play();
+        }
+
+        private void StopPortalHum()
+        {
+            if (_portalHum != null)
+                _portalHum.Stop();
+        }
 
         private void OnHaulChanged(float worth, int pieces)
         {

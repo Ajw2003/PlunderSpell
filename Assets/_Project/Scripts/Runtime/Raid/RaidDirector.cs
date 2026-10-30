@@ -355,6 +355,7 @@ namespace Plunderspell.Raid
             ArrivalPoint = CastleSpawnResolver.ResolveArrival(Castle, seed, out int arrivalModule);
             ArrivalModuleIndex = arrivalModule;
             OpenPortal();
+            PlaceEscapePortal(seed);
             SealCastle();
 
             // Before the spawners, so a guard or a loot pile is never dropped
@@ -590,6 +591,31 @@ namespace Plunderspell.Raid
                 _extractionZone.PlaceAsPortal(floorPoint);
             EventManager.Instance?.Publish(new PortalOpened(floorPoint));
         }
+
+        /// <summary>
+        /// Tells the zone where the hidden escape portal opens when the Ophan arrives: a room in the farthest third
+        /// of the castle from the arrival, from the seed, so every peer picks the same one (#553, #554).
+        /// </summary>
+        private void PlaceEscapePortal(int seed)
+        {
+            if (_extractionZone == null || Castle == null)
+                return;
+            float started = Time.realtimeSinceStartup;
+            int module = CastleEscapePlanner.ChooseModule(Castle, Castle.NavGraph, ArrivalModuleIndex, ArrivalPoint, seed);
+            if (module == CastleEscapePlanner.NoEscape)
+            {
+                Debug.LogWarning("[Raid] No room qualified for the escape portal; it will stay closed.");
+                return;
+            }
+            Vector3 standing = CastleSpawnResolver.FirstClearStandingPoint(Castle.PlacedModules[module].Position);
+            float feet = standing.y - CastleSpawnResolver.PlayerHeight * 0.5f - CastleSpawnResolver.FloorClearance;
+            _extractionZone.SetEscapePoint(new Vector3(standing.x, feet, standing.z));
+            EscapeModuleIndex = module;
+            Debug.Log($"[Raid] Escape portal room {module} at {standing}, chosen in {(Time.realtimeSinceStartup - started) * 1000f:F1} ms.");
+        }
+
+        /// <summary>The room the escape portal opens in this raid, or -1.</summary>
+        public int EscapeModuleIndex { get; private set; } = -1;
 
         /// <summary>Puts the invisible boundary round the castle just built.</summary>
         private void SealCastle()

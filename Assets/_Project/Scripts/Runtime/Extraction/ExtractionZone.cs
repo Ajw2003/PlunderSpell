@@ -82,6 +82,31 @@ namespace Plunderspell.Extraction
         /// </summary>
         public void PlaceAsPortal(Vector3 floorPoint)
         {
+            _arrivalPoint = floorPoint;
+            PlaceAt(floorPoint);
+        }
+
+        /// <summary>
+        /// Records where the hidden escape portal will open; the zone does not move until the hunt
+        /// window opens. Called on every peer with the same point, like <see cref="PlaceAsPortal"/>.
+        /// </summary>
+        public void SetEscapePoint(Vector3 floorPoint)
+        {
+            _escapePoint = floorPoint;
+            _hasEscapePoint = true;
+        }
+
+        /// <summary>What the portal is doing now, derived on every peer from the raid clock.</summary>
+        public PortalState State => _state;
+
+        private PortalState _state = PortalState.Arrival;
+        private Vector3 _arrivalPoint;
+        private Vector3 _escapePoint;
+        private bool _hasEscapePoint;
+        private bool _warnedNoEscapePoint;
+
+        private void PlaceAt(Vector3 floorPoint)
+        {
             transform.position = floorPoint;
 
             if (TryGetComponent(out BoxCollider box))
@@ -191,6 +216,9 @@ namespace Plunderspell.Extraction
                 EventManager.Instance?.Publish(new ExtractionTimerChanged(_publishedTime));
             }
 
+            if (!_extractionComplete.value)
+                ApplyPortalState();
+
             if ((isSpawned && !isServer) || _extractionComplete.value)
                 return;
 
@@ -200,7 +228,8 @@ namespace Plunderspell.Extraction
                 PollContents();
             }
 
-            TickPlayerExtraction();
+            if (_state != PortalState.Closed)
+                TickPlayerExtraction();
             if (_extractionComplete.value)
                 return;
 
@@ -210,6 +239,69 @@ namespace Plunderspell.Extraction
                 _timeRemaining.value = 0f;
                 ResolveExtraction();
             }
+        }
+
+        /// <summary>
+        /// Moves the portal to the state the raid clock calls for, acting only on a change. Runs on
+        /// every peer: they all hold the clock, so nothing about the state is replicated.
+        /// </summary>
+        private void ApplyPortalState()
+        {
+            // A client's clock reads 0 until the first sync arrives; that is not the end of the raid.
+            if (_timeRemaining.value <= 0f)
+                return;
+
+            PortalState wanted = PortalSchedule.At(RaidLength - _timeRemaining.value, _timeRemaining.value,
+                PortalSchedule.ArrivalSeconds, OphanDemandTuning.Default.HuntWindowSeconds);
+            if (wanted == PortalState.Escape && !_hasEscapePoint)
+            {
+                if (!_warnedNoEscapePoint)
+                    Debug.LogWarning("ExtractionZone: the hunt window opened but no escape point was set; the portal stays closed.");
+                _warnedNoEscapePoint = true;
+                wanted = PortalState.Closed;
+            }
+
+            if (wanted == _state)
+                return;
+            _state = wanted;
+
+            if (_volume == null)
+                _volume = GetComponent<Collider>();
+
+            switch (wanted)
+            {
+                case PortalState.Closed:
+                    if (_volume != null)
+                        _volume.enabled = false;
+                    ReleaseTrackedContents();
+                    CancelPlayerExtraction();
+                    break;
+                case PortalState.Escape:
+                    PlaceAt(_escapePoint);
+                    if (_volume != null)
+                        _volume.enabled = true;
+                    break;
+                default:
+                    PlaceAt(_arrivalPoint);
+                    if (_volume != null)
+                        _volume.enabled = true;
+                    break;
+            }
+
+            EventManager.Instance?.Publish(new PortalStateChanged(wanted, transform.position));
+        }
+
+        /// <summary>Lets resting loot go and forgets everything tracked, pinned test entries included.</summary>
+        private void ReleaseTrackedContents()
+        {
+            foreach (LootValue piece in _restingLoot)
+                SetInPortal(piece, false);
+            _restingLoot.Clear();
+            _lootInZone.Clear();
+            _playersInZone.Clear();
+            _pinnedLoot.Clear();
+            _pinnedPlayers.Clear();
+            OnHaulChanged();
         }
 
         /// <summary>
@@ -442,6 +534,13 @@ namespace Plunderspell.Extraction
             foreach (LootValue piece in _restingLoot)
                 SetInPortal(piece, false);
             _restingLoot.Clear();
+            // Back to Arrival without announcing a close; the next raid places the zone again.
+            _state = PortalState.Arrival;
+            _warnedNoEscapePoint = false;
+            if (_volume == null)
+                _volume = GetComponent<Collider>();
+            if (_volume != null)
+                _volume.enabled = true;
             ResetClock();
             OnHaulChanged();
         }

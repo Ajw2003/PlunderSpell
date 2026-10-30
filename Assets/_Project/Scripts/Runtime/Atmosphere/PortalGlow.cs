@@ -42,6 +42,7 @@ namespace Plunderspell.Atmosphere
         private void OnEnable()
         {
             EventManager.Instance?.Subscribe(this, (PortalOpened e) => OnPortalOpened(e.Point));
+            EventManager.Instance?.Subscribe(this, (PortalStateChanged e) => OnPortalStateChanged(e.State, e.FloorPoint));
             EventManager.Instance?.Subscribe(this, (RaidPhaseChanged e) => OnPhaseChanged(e.Phase));
         }
 
@@ -61,6 +62,17 @@ namespace Plunderspell.Atmosphere
                     pad.enabled = false;
             }
             Show(true);
+        }
+
+        // The portal closes after the arrival grace and reopens elsewhere for the escape.
+        private void OnPortalStateChanged(PortalState state, Vector3 floorPoint)
+        {
+            if (state == PortalState.Closed)
+            {
+                Show(false);
+                return;
+            }
+            OnPortalOpened(floorPoint);
         }
 
         private void OnPhaseChanged(RaidPhase phase)
