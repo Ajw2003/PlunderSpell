@@ -1,0 +1,160 @@
+{
+ "title": "QA: Lair in its own scene",
+ "eyebrow": "Hand test for issue #536 (the Lair and the Market in their own scene) and its steps, issues #537 to #543, #549 and #550",
+ "approval": "QA passed: lair scene split",
+ "qa": {
+  "feature": "The Lair and the Market in their own scene",
+  "base": "38da1087",
+  "unverified": [
+   "Nobody has played the new flow by hand yet.",
+   "The loading screen was seen in a solo run; in co-op it was not photographed on the client.",
+   "Extracting loot and finding it on the pile was checked solo, not in co-op.",
+   "The Market yard was not walked through after the split; only the Lair room was looked at."
+  ],
+  "files": {}
+ },
+ "short": {
+  "lead": "The game now runs on three scenes. Bootstrap is never unloaded. It holds the network, the players, the campaign and the raid director. The Lair scene holds the Lair room and the Market. The raid scene holds the castle. Only one of the Lair and the raid is loaded at a time, behind a loading screen, and each player's screen stays up until their own castle is built. In a co-op run, both machines built the same castle (63 rooms, 246 breakable parts). After returning, both had 0 rooms, 0 parts and 0 debris effects left. The editor tests pass. You still need to play the steps below by hand.",
+  "hint": "Start co-op with the command in the first item, \"Open the game in co-op\". Then play the items in order. Each one says what you should see.",
+  "key": [
+   [
+    "Built and tested by code",
+    "done"
+   ],
+   [
+    "You play it",
+    "you"
+   ]
+  ],
+  "items": [
+   [
+    "play",
+    "Start",
+    "Open the game in co-op",
+    "you",
+    "In Git Bash, from C:\\Users\\aj\\Desktop\\GameDev\\PlunderSpell-demand, run: bash Tools/Unity/coop_local.sh. It rebuilds the client if the game changed, presses Play in the Editor (which now starts in the Bootstrap scene), hosts, and opens a second window that joins. You should see \"Co-op on this PC is up\" and two windows side by side, both in the Lair.",
+    "Run it once; every item below follows from it."
+   ],
+   [
+    "eye",
+    "Lair",
+    "The Lair looks as it did",
+    "you",
+    "The Lair scene now has its own moon and night atmosphere. Without them it was flat and grey. Walk the Lair and the Market in both windows. You should see the warm night look, the ledger, the dial, the haul pile and the counters, all as before.",
+    "Say if anything is missing or lit wrongly."
+   ],
+   [
+    "play",
+    "Set out",
+    "Set out through the portal",
+    "you",
+    "Step into the portal. Both windows should show the Loading card, then arrive in the castle with it already built; no castle should appear around you after you arrive.",
+    "Tell me how long the card stayed up, and whether any part of the castle popped in after you arrived."
+   ],
+   [
+    "play",
+    "Return",
+    "Die or extract, and return",
+    "you",
+    "Die in one run and extract in another, and go back to the Lair each time. You should see the Loading card again, then the Lair, with no part of the castle anywhere. On the extract run, carry a piece out first, then look for it on the haul pile.",
+    "Tell me if any part of the raid was left behind, or if the piece is missing from the haul pile."
+   ],
+   [
+    "play",
+    "Again",
+    "Set out a second time",
+    "you",
+    "Behind the Loading card, a fresh castle should be built, different from the first one.",
+    "Tell me if the second castle looks like leftovers from the first raid."
+   ]
+  ]
+ },
+ "changes": [
+  [
+   "new",
+   "Three scenes",
+   "Bootstrap, Lair and RaidScene, listed first in the build, in that order.",
+   [
+    "Everything in RaidScene",
+    "Bootstrap never unloaded; Lair or raid on top, one at a time"
+   ],
+   "SceneSplitTool.cs, SceneFlow.cs, Bootstrap.unity, Lair.unity, RaidScene.unity.",
+   null
+  ],
+  [
+   "new",
+   "Loading screen",
+   "A full-screen Loading card on every machine while a scene changes.",
+   [
+    "No loading screen",
+    "Stays up until that machine's castle is built, or until it is back in the Lair"
+   ],
+   "LoadingScreen.cs, SceneFlow.cs.",
+   {
+    "src": "docs/generated/scene-split-536/loading.png",
+    "caption": "The card while setting out (solo, Editor)."
+   }
+  ],
+  [
+   "chg",
+   "Lair lighting",
+   "The Lair has its own moon and night atmosphere.",
+   [
+    "Lit by the raid scene's moon while the two were one scene",
+    "Lit by its own moon and night atmosphere"
+   ],
+   "Lair.unity.",
+   {
+    "compare": {
+     "before": "docs/generated/scene-split-536/lair.png",
+     "after": "docs/generated/scene-split-536/lair-lit.png"
+    },
+    "caption": "Left: the Lair right after the split. Right: with its own atmosphere."
+   }
+  ],
+  [
+   "chg",
+   "Clean return",
+   "Returning unloads the raid scene, so nothing of a raid survives it.",
+   [
+    "63 rooms, 214 parts and 434 debris effects left behind after returning to the Lair",
+    "0 rooms, 0 parts and 0 debris effects on both machines"
+   ],
+   "SceneFlow.cs; co-op run split-2.",
+   null
+  ],
+  [
+   "chg",
+   "Extracted loot",
+   "A haul extracted while the Lair is unloaded goes into the saved pile and appears when the Lair loads.",
+   [
+    "Landed on the pile in the same scene",
+    "Saved, then laid out on the pile"
+   ],
+   "HaulLanding.cs, RaidDirector.cs.",
+   null
+  ],
+  [
+   "chg",
+   "Ophan Gym",
+   "A raid scene of its own, entered through the Lair.",
+   [
+    "A copy of the whole game scene",
+    "A raid scene of its own, loaded in place of RaidScene when you run coop_local.sh with --gym"
+   ],
+   "OphanGymBuilder.cs, OphanGym.cs, coop_local.sh.",
+   null
+  ]
+ ],
+ "wrapup": {
+  "summary": "The split is built and pushed on the branch AjsAgent/gym-with-demand-page. Nobody has played it by hand yet.",
+  "changing": "How the game moves between the Lair and a raid, the loading screen, and the Lair's lighting.",
+  "blocking": "Your hand test. Issues #536 to #543, #549 and #550 stay marked \"needs review\" until it passes.",
+  "next": "If it passes, the debt removal gets its own thread, as you asked. If an item fails, tell me which item and what you saw, and I will fix it.",
+  "todo": [
+   "Play the items in order.",
+   "Tap <b>Copy my reply</b>.",
+   "Send it with \"QA passed: lair scene split\", if everything passed. If an item failed, tell me which one."
+  ]
+ }
+}
