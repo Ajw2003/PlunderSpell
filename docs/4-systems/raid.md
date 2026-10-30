@@ -264,7 +264,9 @@ Sessions start, and extraction/death returns, in the walkable Lair room, not the
   server or offline only, carrying `PiecesOf` (`ExtractionZone.cs:249`): the `LootItem` of every unbroken piece in the zone.
   A piece is identified by its `LootItem` because that is what `RaidLootTable` already maps to a prefab
   (`RaidLootTable.PrefabFor`), so no new id scheme.
-- `HaulLanding.cs:64` (child `HaulLanding` of the Lair room, local (4.0, 0.30, 0), built in `LairRoomForge.cs`) spawns them
+- `HaulLanding.cs:64` (child `HaulLanding` of the Lair room, built in `LairRoomForge.cs` at local (4.0, 0.30, 0); since
+  2026-10-29 overridden in `Lair.unity` to local (-5.7, 0.30, 2.6), the far end of the room from the portal, because a big
+  pile beside the portal pushed players back into it (aj). The forge still says (4.0, 0.30, 0)) spawns them
   on the server through its own `LootSpawner.SpawnPile` (`LootSpawner.cs:133`): same `SpawnLoose` path, kinematic then
   released after the settle delay. Positions come from `HaulLayout.Offsets(count, start)` (`HaulLayout.cs:23`; a 7 x 3 grid,
   0.45 m apart, stacked above that). The pile belongs to its own spawner, so `RaidDirector.ApplyResult`'s
