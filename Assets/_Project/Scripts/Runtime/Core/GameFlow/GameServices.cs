@@ -39,7 +39,8 @@ namespace Plunderspell.Core
 
             GameState = new GameStateManager();
             PlayerStats = new PlayerStats(maxMana: 100);
-            Extraction = new ExtractionController(extractionDurationSeconds: 8f);
+            // 4 s on the escape portal; whoever is on the pad when it ends leaves, the rest are left behind (aj, 2026-10-29, #555).
+            Extraction = new ExtractionController(extractionDurationSeconds: 4f);
             Interfaces.Damage.SafePlace = () => IsSafePlace;
             IsInitialized = true;
         }
