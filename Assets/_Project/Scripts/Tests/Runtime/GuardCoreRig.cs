@@ -10,6 +10,7 @@ namespace Plunderspell.Tests
     internal sealed class GuardCoreRig
     {
         private readonly List<Object> _created = new List<Object>();
+        private FlatFloor _floor;
 
         public EnemyDirector Director { get; private set; }
 
@@ -18,8 +19,15 @@ namespace Plunderspell.Tests
             GuardArrivalGrace.End();
             TestDirector.Reset();
             Director = TestDirector.Ensure();
-            Director.Navigation.SetMap(new FlatFloor());
+            _floor = new FlatFloor();
+            Director.Navigation.SetMap(_floor);
         }
+
+        /// <summary>Makes the flat floor report a doorway as the first one on every route, as a castle with a wall would.</summary>
+        public void SetDoorway(Vector3 doorway) => _floor.Doorway = doorway;
+
+        /// <summary>Makes the flat floor count this many rooms between any two points.</summary>
+        public void SetRoomsApart(int rooms) => _floor.RoomsApart = rooms;
 
         public void TearDown()
         {
@@ -140,6 +148,24 @@ namespace Plunderspell.Tests
             }
 
             public bool IsWalkClear(Vector3 from, Vector3 to, float halfWidth) => true;
+
+            public bool TryFindNearestReachable(Vector3 from, Vector3 target, out Vector3 reachable)
+            {
+                reachable = target;
+                return true;
+            }
+
+            public Vector3? Doorway;
+
+            public int RoomsApart;
+
+            public int RoomsBetween(Vector3 from, Vector3 to) => RoomsApart;
+
+            public bool TryFindFirstDoorway(Vector3 from, Vector3 to, out Vector3 doorway)
+            {
+                doorway = Doorway ?? to;
+                return Doorway.HasValue;
+            }
 
             public bool TryGetFloorHeight(Vector3 position, out float floorHeight)
             {

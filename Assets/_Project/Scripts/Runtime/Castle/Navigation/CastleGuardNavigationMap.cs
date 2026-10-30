@@ -14,6 +14,9 @@ namespace Plunderspell.Castle
         // Within this of a floor cell counts as standing on it, for settling height.
         private const float FloorSearchDistance = 1.5f;
         private const float SightSampleSpacing = 0.25f;
+        // The nearest-reachable search covers this far round the target, a sample every spacing.
+        private const float NearestSearchRadius = 10f;
+        private const float NearestSearchSpacing = 1f;
 
         private readonly CastleNavGraph _graph;
 
@@ -41,6 +44,82 @@ namespace Plunderspell.Castle
                 return true;
             failure = BlockedReason.DoorClosed;
             return false;
+        }
+
+        /// <summary>
+        /// Looks at floor on a square grid round the target, at the guard's own height, and keeps the cell
+        /// closest to the target that is in the guard's walkable area. Only runs after a route failed.
+        /// </summary>
+        public bool TryFindNearestReachable(Vector3 from, Vector3 target, out Vector3 reachable)
+        {
+            reachable = from;
+            int startCell = _graph.NearestWalkableCell(from);
+            if (startCell < 0)
+                return false;
+
+            float bestDistance = float.MaxValue;
+            int steps = Mathf.RoundToInt(NearestSearchRadius / NearestSearchSpacing);
+            for (int x = -steps; x <= steps; x++)
+            {
+                for (int z = -steps; z <= steps; z++)
+                {
+                    var sample = new Vector3(target.x + x * NearestSearchSpacing, from.y, target.z + z * NearestSearchSpacing);
+                    int cell = _graph.NearestWalkableCell(sample, NearestSearchSpacing);
+                    if (cell < 0 || !_graph.IsReachableWithDoorsOpen(startCell, cell))
+                        continue;
+                    Vector3 spot = _graph.CellPosition(cell);
+                    float distance = (spot - target).sqrMagnitude;
+                    if (distance >= bestDistance)
+                        continue;
+                    bestDistance = distance;
+                    reachable = spot;
+                }
+            }
+            return bestDistance < float.MaxValue;
+        }
+
+        /// <summary>
+        /// Follows the cell route and stops at the first step that changes room: the doorway is the middle of
+        /// that step, which is the archway or hole between the two cells.
+        /// </summary>
+        public bool TryFindFirstDoorway(Vector3 from, Vector3 to, out Vector3 doorway)
+        {
+            doorway = to;
+            var route = new List<Vector3>();
+            if (!_graph.FindPath(from, to, route))
+                return false;
+
+            int previous = _graph.NearestWalkableCell(route[0], CastleNavTile.CellSize);
+            for (int i = 1; i < route.Count; i++)
+            {
+                int cell = _graph.NearestWalkableCell(route[i], CastleNavTile.CellSize);
+                if (previous >= 0 && cell >= 0 && CastleNavGrid.ModuleOf(cell) != CastleNavGrid.ModuleOf(previous))
+                {
+                    doorway = (route[i - 1] + route[i]) * 0.5f;
+                    return true;
+                }
+                previous = cell;
+            }
+            return false;
+        }
+
+        /// <summary>Counts the steps on the cell route that change room, as <see cref="TryFindFirstDoorway"/> finds the first.</summary>
+        public int RoomsBetween(Vector3 from, Vector3 to)
+        {
+            var route = new List<Vector3>();
+            if (!_graph.FindPath(from, to, route))
+                return -1;
+
+            int rooms = 0;
+            int previous = _graph.NearestWalkableCell(route[0], CastleNavTile.CellSize);
+            for (int i = 1; i < route.Count; i++)
+            {
+                int cell = _graph.NearestWalkableCell(route[i], CastleNavTile.CellSize);
+                if (previous >= 0 && cell >= 0 && CastleNavGrid.ModuleOf(cell) != CastleNavGrid.ModuleOf(previous))
+                    rooms++;
+                previous = cell;
+            }
+            return rooms;
         }
 
         public bool TryGetFloorHeight(Vector3 position, out float floorHeight)

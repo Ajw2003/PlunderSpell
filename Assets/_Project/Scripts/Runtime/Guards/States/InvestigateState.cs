@@ -11,20 +11,28 @@ namespace Plunderspell.Guards
     /// sweep. A newer lead at least as strong re-targets the walk; a weaker one is dropped. A blocked
     /// walk (a closed door, an unreachable spot) is not worth retrying, so the guard gives up.
     ///
-    /// The guard only stands while it looks: turning in place would mean moving the transform, and
-    /// movement belongs to the navigation service alone.
+    /// The guard faces the spot before it walks, and at the spot it sweeps 60 degrees left then right
+    /// (<see cref="GuardLookAround"/>, #483). Only yaw changes; position belongs to the navigation service.
     /// </summary>
     public sealed class InvestigateState : GuardState
     {
         private Vector3 _spot;
+        private Vector3 _heading;
+        private bool _hasHeading;
         private float _leadStrength;
         private float _lookTimeLeft;
         private bool _arrived;
         private bool _gaveUp;
         private Transform _lastSighting;
+        private readonly GuardNearestReachableWalk _detour;
+        private bool _onDetour;
+        private bool _walkPending;
+        private readonly GuardLookAround _look;
 
         public InvestigateState(Guard guard) : base(guard)
         {
+            _look = new GuardLookAround(guard);
+            _detour = new GuardNearestReachableWalk(guard);
         }
 
         public override GuardAlertState AlertState => GuardAlertState.Investigating;
@@ -49,6 +57,8 @@ namespace Plunderspell.Guards
 
         public override void Exit()
         {
+            _look.Cancel();
+            _walkPending = false;
             Context.Navigator.Stop();
             Context.Navigator.Reached -= OnReached;
             Context.Navigator.RouteBlocked -= OnBlocked;
@@ -60,15 +70,45 @@ namespace Plunderspell.Guards
             if (chase != null)
                 return chase;
 
+            Context.LastKnown.Tick(deltaTime);
             RetargetOnNewLead();
             if (_gaveUp)
                 return Context.States.Patrol;
+
+            _look.Tick(deltaTime);
+            if (_walkPending && !_look.IsTurning)
+                StartWalk();
 
             if (!_arrived)
                 return this;
 
             _lookTimeLeft -= deltaTime;
-            return _lookTimeLeft <= 0f ? Context.States.Patrol : this;
+            return _lookTimeLeft <= 0f && !_look.IsTurning ? FinishLook() : this;
+        }
+
+        // A guard that lost a player keeps searching (#487) until 8 s pass with nothing new and the last-known
+        // spot is 3 or more rooms away: first the spot, then on along the heading, looking round at each stop.
+        private State<Guard> FinishLook()
+        {
+            GuardLastKnown known = Context.LastKnown;
+            IGuardNavigationMap map = Context.Link.Director != null ? Context.Link.Director.Navigation.Map : null;
+            if (!known.IsHunting || known.MayGiveUp(map, Context.transform.position))
+            {
+                known.Forget();
+                return Context.States.Patrol;
+            }
+
+            if (known.TryNextLeg(_spot, out Vector3 point))
+                BeginLeg(point, _leadStrength, false, Vector3.zero);
+            else
+                BeginLook();
+            return this;
+        }
+
+        private void StartWalk()
+        {
+            _walkPending = false;
+            Context.Navigator.MoveTo(_spot, LeadSpeed(), MoveReason.Investigate);
         }
 
         private State<Guard> NoticePlayer()
@@ -103,16 +143,58 @@ namespace Plunderspell.Guards
 
         private void GoToWaitingLead()
         {
-            _leadStrength = Context.Leads.Strength;
-            _spot = Context.Leads.Take();
-            _arrived = false;
-            _lookTimeLeft = Context.Tuning.InvestigateLookSeconds;
-            Context.Navigator.MoveTo(_spot, Context.Tuning.InvestigateSpeed, MoveReason.Investigate);
+            float strength = Context.Leads.Strength;
+            bool hasHeading = Context.Leads.HasHeading;
+            Vector3 heading = Context.Leads.Heading;
+            Vector3 spot = Context.Leads.Take();
+            Context.LastKnown.Heard(spot, hasHeading, heading);
+            BeginLeg(spot, strength, hasHeading, heading);
         }
 
-        private void OnReached(Arrived arrived) => _arrived = true;
+        private void BeginLeg(Vector3 spot, float strength, bool hasHeading, Vector3 heading)
+        {
+            _leadStrength = strength;
+            _hasHeading = hasHeading;
+            _heading = heading;
+            _spot = spot;
+            _arrived = false;
+            _lookTimeLeft = Context.Tuning.InvestigateLookSeconds;
+            _onDetour = false;
+            _walkPending = true;
+            _look.BeginTurnToward(_spot);
+        }
 
-        // Any block means the spot cannot be got to now: give up rather than retry.
-        private void OnBlocked(Blocked blocked) => _gaveUp = true;
+        private void OnReached(Arrived arrived) => BeginLook();
+
+        private void BeginLook()
+        {
+            _arrived = true;
+            _lookTimeLeft = Context.Tuning.InvestigateLookSeconds;
+            // At a doorway the guard faces back toward the sound, then looks about from there (#485).
+            if (_hasHeading)
+                _look.BeginSweepFacing(_heading);
+            else
+                _look.BeginSweep();
+        }
+
+        // A cry or the hue and cry is followed at chase speed; a mere noise at investigate speed.
+        private float LeadSpeed() =>
+            _leadStrength >= GuardLeads.CryStrength ? Context.Tuning.ChaseSpeed : Context.Tuning.InvestigateSpeed;
+
+        // No route to the spot: look from the nearest floor the guard can reach (#481). Any other block
+        // means the spot cannot be got to now, so give up rather than retry.
+        private void OnBlocked(Blocked blocked)
+        {
+            _onDetour = !_onDetour && GuardNearestReachableWalk.IsMissingRoute(blocked)
+                && _detour.TryStart(_spot, LeadSpeed(), MoveReason.Investigate);
+            if (_onDetour)
+                return;
+
+            // A hunting guard looks round where it stands instead of leaving the hunt (#487).
+            if (Context.LastKnown.IsHunting)
+                BeginLook();
+            else
+                _gaveUp = true;
+        }
     }
 }

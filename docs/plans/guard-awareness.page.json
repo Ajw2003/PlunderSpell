@@ -1,0 +1,301 @@
+{
+  "title": "Guard awareness",
+  "eyebrow": "Options for the guard problems from your co-op playtest of 2026-10-28 · nothing built yet",
+  "approval": "Design approved: Guard awareness",
+  "short": {
+    "lead": "I read every part of the guards: what they see, what they hear, how they chase, and how they walk the castle. Each thing you saw has a cause in the code, and some have several. Below are the causes, a set of fixes that come with any choice, and five choices with my suggestion marked.",
+    "hint": "Tap a symptom to see what causes it in the code today.",
+    "key": [
+      [
+        "I found it",
+        ""
+      ],
+      [
+        "You pick",
+        "you"
+      ]
+    ],
+    "items": [
+      [
+        "eye",
+        "Staring",
+        "Why guards get stuck looking at things",
+        "",
+        "When a guard reaches the spot it is checking, it stands still for 3 seconds facing the way it walked in, then goes back to its round. It never turns its head. That spot is usually where you ducked behind cover, so it stares at the cover. Any prop, barrel or other guard between its eye and you also hides you completely.",
+        "Fixed in every option (Changes, \"Look around\" and \"Only stone blocks the eye\")."
+      ],
+      [
+        "stop",
+        "Holes",
+        "Why holes make guards ignore you",
+        "",
+        "The map does learn about holes after a charged beam. Two guard rules then go wrong. A guard checking a spot it has no route to gives up at once and goes back to its round. A guard chasing you across a hole looks for a new route every quarter second, gets \"no route\" every time, and stands at the edge doing nothing. It does not take the long way, throw, or call for help.",
+        "Fixed in every option (Changes, \"No route\")."
+      ],
+      [
+        "hand",
+        "Too soft",
+        "Why they are not aggressive enough",
+        "you",
+        "They cannot catch you: they chase at 4.5 metres a second and you walk at 6. The alarm's speed bonus was written but is never used. Only one melee guard may swing at a player at a time, so the others stand in a ring and wait. They give up after 0.75 seconds out of sight.",
+        "Pick how hard they push (Choices, \"How much more aggressive?\")."
+      ],
+      [
+        "search",
+        "Senses",
+        "Why there is no real cone or awareness",
+        "you",
+        "Sight is one flat wedge, 110 degrees wide, fixed to the guard's body. You are seen instantly inside it and never outside it, even at arm's length beside the guard. Hearing hands the guard the exact spot of every noise, even through two walls, so it never has to work out where a sound came from.",
+        "Pick the cone, the hearing and the range (Choices 1 to 3)."
+      ],
+      [
+        "loop",
+        "Giving up",
+        "Why they go back to patrol so fast",
+        "you",
+        "Out of sight for 0.75 seconds ends a chase. The guard walks to where it last saw you, stands for 3 seconds, and goes back to its round. Four seconds behind a pillar resets any guard, whatever the alarm level. Nothing remembers which way you were going.",
+        "Pick when a guard gives up (Choices, \"When does a guard lose you?\")."
+      ],
+      [
+        "bulb",
+        "Standing still",
+        "Why they seem brain dead in front of you",
+        "",
+        "There are five causes, and any of them matches what you saw. It may be frozen at a hole, or waiting for its turn to swing. A prop or another guard may block its line of sight. In the first 20 seconds of a raid a calm castle deliberately sees nobody. Or you are standing beside it, outside the wedge.",
+        "Fixed by the Changes below and Choices 1 and 5. The 20-second grace stays unless you say otherwise."
+      ]
+    ]
+  },
+  "changes": [
+    [
+      "keep",
+      "The castle map after a break",
+      "Already up to date; I do not touch it.",
+      null,
+      "After a charged beam the host clears cells over holes, adds cells a broken wall freed, links the two sides of a wall hole, and makes every walking guard look for a new route (CastleNavGraph.RefreshAfterBreak, #478). The problem is what the guards do with a \"no route\" answer, not the map. The other session's #478 files stay untouched; I only ask the map read-only questions through the existing adapter (CastleGuardNavigationMap).",
+      null
+    ],
+    [
+      "keep",
+      "States, sight timing, attack turns",
+      "Reused, not rewritten.",
+      null,
+      "The guard's states (Patrol, Investigate, Chase, Combat, HoldBelow and the rest), the 12 looks a second, the turn-taking director and the stone throw for players out of reach all stay. Each choice below changes numbers or adds a rule inside them.",
+      null
+    ],
+    [
+      "chg",
+      "No route",
+      "A guard with no route goes the long way, or throws.",
+      [
+        "Gives up, or freezes at the edge",
+        "Takes the nearest point it can reach, throws, calls help"
+      ],
+      "When a route to the player or a lead fails, the guard walks to the reachable floor nearest the target instead of giving up. A melee guard that still cannot get there is treated like a player standing on a table today: it stays below, throws stones and calls for help (HoldBelowState, #237). A chase never just stands at an edge.",
+      null
+    ],
+    [
+      "chg",
+      "Look around",
+      "A standing guard sweeps the room.",
+      [
+        "Stares the way it walked in",
+        "Turns 60 degrees left, then 60 degrees right"
+      ],
+      "At an investigated spot and at each patrol pause the guard turns to scan, so the cone sweeps the room. The turn goes through the existing facing rule, so nothing else moves the guard.",
+      null,
+      null,
+      {
+        "src": "guard-awareness-src/cone-today.svg",
+        "alt": "Diagram of today's single 110 degree wedge, with a player unseen beside the guard and another hidden by a crate",
+        "caption": "Today: one wedge, and a crate hides the player."
+      }
+    ],
+    [
+      "chg",
+      "Only stone blocks the eye",
+      "Props, loot and guards stop hiding players.",
+      [
+        "Any collider on the Default layer blocks sight",
+        "Only castle walls, floors and doors block sight"
+      ],
+      "The line of sight already ignores the player's own body. It will also ignore loot, other guards and room props. Each room is already split into wall, roof, floor and props when the castle is prepared in the editor (#471), so the eye keeps only the first three and doors. Before building this, I will confirm that split can still be told apart while the game runs.",
+      null
+    ],
+    [
+      "chg",
+      "Turn toward a sound",
+      "A guard that hears something looks that way first.",
+      [
+        "Walks off with its back to the sound",
+        "Turns to face it, then moves"
+      ],
+      "Every heard noise turns the guard toward where the sound reached it before it walks, so its cone covers that direction. This comes with any hearing choice.",
+      null
+    ]
+  ],
+  "choices": [
+    [
+      "cone",
+      "What should the vision cone be?",
+      [
+        [
+          "A",
+          "Three layers: centre, side, and close",
+          1,
+          "Centre 110 degrees at full range, seen instantly (as today). Sides out to 180 degrees at half range, noticed after 0.4 seconds in view. A 2.5 metre circle all round where a guard feels you whatever way it faces. Effect on play: you can no longer stand beside a guard unseen; creeping past at a distance still works, and side glimpses give you 0.4 seconds to duck.",
+          {
+            "src": "guard-awareness-src/cone-layered.svg",
+            "alt": "Diagram of the suggested three-layer cone: a full-range centre wedge, a wider half-range side band, and a small circle all round the guard",
+            "caption": "Option A: centre, sides, and a close circle."
+          }
+        ],
+        [
+          "B",
+          "Today's wedge, wider and with the look-around",
+          0,
+          "One wedge, widened from 110 to 140 degrees, plus the sweep from Changes. Effect on play: simpler, and a sweep covers most of a room, but you are still invisible right beside a guard between sweeps."
+        ],
+        [
+          "C",
+          "A suspicion meter",
+          0,
+          "Being in view fills a meter, faster when close and in light, and the guard acts when it fills. Effect on play: the classic stealth feel, but guards react more slowly, which works against making them more aggressive."
+        ]
+      ],
+      "Option A fixes standing beside a guard and keeps the instant reaction in front, which matches \"more aggressive\" without turning it into a stealth game."
+    ],
+    [
+      "hear",
+      "How should a guard work out where a sound came from?",
+      [
+        [
+          "A",
+          "Where it came in, and which way",
+          1,
+          "On each noise, a sphere cast (a ray with 0.3 metres of thickness) runs from the guard toward the source. If it is clear, the guard knows the spot. If a wall is in the way, the guard is told the point where the sound reached its room (the first doorway or hole on the route toward the source) and a direction from there back to the source. It walks to that point, faces the arrow, and pushes on along it a room at a time while the noise repeats. Effect on play: guards come through the door you were heard behind instead of homing in through walls; a quiet player who moves after a noise can slip them.",
+          {
+            "src": "guard-awareness-src/sound-doorway.svg",
+            "alt": "Diagram of two rooms joined by a door: the guard hears a footstep in the next room, is told the door as the point it was heard, and an arrow from the door points to the footstep",
+            "caption": "Option A: the door it came through, and an arrow back to the source."
+          }
+        ],
+        [
+          "B",
+          "Direction and rough distance only",
+          0,
+          "The guard gets the direction and a distance guessed from loudness, and walks to floor that way. Effect on play: cheaper to build, but walls and corners send guards the wrong way more often."
+        ],
+        [
+          "C",
+          "Keep the exact spot",
+          0,
+          "As today, plus the turn toward the sound from Changes. Effect on play: guards stay perfect hunters of noise through walls.",
+          {
+            "src": "guard-awareness-src/sound-today.svg",
+            "alt": "Diagram of today's hearing: a dashed line from the guard straight through a wall to the footstep",
+            "caption": "Today: the exact spot, through the wall."
+          }
+        ]
+      ],
+      "Option A is what you asked for, and it uses the castle's own doorways and the holes the beam makes, so breaks become new ways in for sound and for guards."
+    ],
+    [
+      "range",
+      "Which range should be 1.5 times longer?",
+      [
+        [
+          "A",
+          "Sight and hearing both",
+          1,
+          "Sight goes from 21 to 31.5 metres in a calm castle (55 metres at Hue and Cry); a castle room is 12 metres across. Guards hear every noise from 1.5 times as far; the alarm's own hearing does not change, so the alarm does not fill faster. Effect on play: guards notice you about a room sooner, by eye or ear."
+        ],
+        [
+          "B",
+          "Sight only",
+          0,
+          "21 to 31.5 metres calm. Effect on play: long halls get dangerous; noise behaves as today."
+        ],
+        [
+          "C",
+          "Hearing only",
+          0,
+          "Guards hear from 1.5 times as far; sight stays at 21 metres calm. Effect on play: creeping matters more, open rooms behave as today."
+        ],
+        [
+          "D",
+          "Attack range",
+          0,
+          "Melee reach from 2 to 3 metres and the ranged engage distance from 8 to 12 metres. Effect on play: harder fights, no change to how soon you are noticed."
+        ]
+      ],
+      "\"Range\" can mean two things. Detection is what the other symptoms are about, so I suggest A. D is still open if you meant fighting."
+    ],
+    [
+      "lose",
+      "When does a guard lose you?",
+      [
+        [
+          "A",
+          "Counted in rooms",
+          1,
+          "A guard keeps a last-known spot for you, updated by its own eyes, any noise you make, and other guards' sightings. When it loses sight it runs to that spot plus where you were heading, then searches. It gives up only when nothing new has come in for 8 seconds and your last-known spot is 3 or more rooms away. Effect on play: hiding behind a pillar does nothing; breaking away through two doors and going quiet still works.",
+          {
+            "src": "guard-awareness-src/track-rooms.svg",
+            "alt": "Diagram of four rooms in a row: the guard hunts in the first two, searches in the third, and gives up only when the player is in the fourth",
+            "caption": "Option A: it gives up by distance in rooms."
+          }
+        ],
+        [
+          "B",
+          "Longer timers only",
+          0,
+          "Chase lasts 6 seconds out of sight instead of 0.75, and the search lasts 8 seconds, with the look-around sweep. Effect on play: a big change for little code, but a guard still forgets you after 14 seconds behind a pillar."
+        ],
+        [
+          "C",
+          "Option A, shared castle-wide",
+          0,
+          "As A, but every hunting guard shares one last-known spot per player. Effect on play: the castle hunts as a pack; once one guard has seen you, losing them all is hard."
+        ]
+      ],
+      "Option A is the rule you described. C is stronger still; it can come later if A is not enough."
+    ],
+    [
+      "push",
+      "How much more aggressive?",
+      [
+        [
+          "A",
+          "Faster, and two swing at once",
+          1,
+          "Chase speed 5.5 metres a second and the alarm speed bonus switched on (up to 7.7 at Hue and Cry). Two melee guards may swing at one player. Guards follow leads from cries and the hue and cry at chase speed. Effect on play: a calm guard nearly keeps up with a walking player, an alarmed one catches you, and a crowd hurts."
+        ],
+        [
+          "B",
+          "Faster only",
+          0,
+          "The speeds from A, one swing at a time as today. Effect on play: guards catch you but fights feel the same."
+        ],
+        [
+          "C",
+          "Scaled by the alarm",
+          0,
+          "Calm guards behave as today; each alarm level adds speed, a second melee turn at Roused (the third of four alarm levels), and longer memory. Effect on play: early raids stay gentle and a noisy raid turns brutal."
+        ]
+      ],
+      "Option A answers \"not aggressive enough\" directly. The alarm scaling in A comes from the speed bonus that already exists in the code."
+    ]
+  ],
+  "wrapup": {
+    "summary": "Why the guards stare, ignore you near holes, give up fast and seem brain dead, with fixes and five choices.",
+    "changing": "Guard logic only: sight, hearing, the chase, investigate and combat rules. Nothing in the Ophan, fracture, beam or #478 map files.",
+    "blocking": "Your picks for the cone, hearing, range, losing track and aggression, or tell me what to change.",
+    "next": "I record a co-op baseline of today's guards, open the issues, build your picks one at a time, and record the same run after for the QA page.",
+    "todo": [
+      "Pick your answers (Choices).",
+      "Tap <b>Copy my reply</b>.",
+      "Send it with \"Design approved: Guard awareness\", or what to change."
+    ]
+  }
+}

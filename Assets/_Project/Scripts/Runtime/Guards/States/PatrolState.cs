@@ -17,11 +17,13 @@ namespace Plunderspell.Guards
     {
         private readonly GuardPatrolRoute _route = new GuardPatrolRoute();
         private readonly GuardPatrolPlanner _planner;
+        private readonly GuardLookAround _look;
         private float _pauseLeft;
         private Transform _lastSighting;
 
         public PatrolState(Guard guard) : base(guard)
         {
+            _look = new GuardLookAround(guard);
             _planner = new GuardPatrolPlanner(guard.Tuning, () => guard.Random);
         }
 
@@ -35,6 +37,8 @@ namespace Plunderspell.Guards
             _route.Clear();
             _pauseLeft = 0f;
             _lastSighting = null;
+            Context.LastKnown.Forget();
+            _look.Cancel();
             Context.Navigator.Reached += OnReached;
             Context.Navigator.RouteBlocked += OnBlocked;
         }
@@ -49,10 +53,11 @@ namespace Plunderspell.Guards
         public override State<Guard> Tick(float deltaTime)
         {
             _pauseLeft -= deltaTime;
+            _look.Tick(deltaTime);
             NoticeSighting();
             if (Context.Leads.HasLead)
                 return Context.States.Investigate;
-            if (_pauseLeft <= 0f && !Context.Navigator.IsMoving)
+            if (_pauseLeft <= 0f && !_look.IsTurning && !Context.Navigator.IsMoving)
                 WalkToNextPoint();
             return this;
         }
@@ -109,6 +114,10 @@ namespace Plunderspell.Guards
                 _route.DropCurrent();
         }
 
-        private void PauseBeforeNextPoint() => _pauseLeft = Context.Tuning.PatrolPauseSeconds;
+        private void PauseBeforeNextPoint()
+        {
+            _pauseLeft = Context.Tuning.PatrolPauseSeconds;
+            _look.BeginSweep();
+        }
     }
 }

@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Plunderspell.Guards;
+using Plunderspell.Loot;
 using UnityEngine;
 
 namespace Plunderspell.Tests
@@ -39,6 +40,56 @@ namespace Plunderspell.Tests
             guard.Sight.LookNext();
             guard.Tick(Frame);
             return guard.Sight.Visible != null;
+        }
+
+        [Test]
+        public void APlayerInTheCentreOfTheViewIsSeenAtOnce()
+        {
+            Guard guard = GuardAtOrigin();
+            _rig.MakeIntruder(new Vector3(3f, PivotAboveFeet, 8f)); // 20 degrees off, inside the 55 degree centre
+            Assert.That(Sees(guard), Is.True);
+        }
+
+        [Test]
+        public void APlayerAtTheSideOfTheViewIsSeenOnlyAfterPointFourSeconds()
+        {
+            Guard guard = GuardAtOrigin();
+            _rig.MakeIntruder(new Vector3(8f, PivotAboveFeet, 2f)); // 76 degrees off: past the centre, inside the sides
+            Assert.That(Sees(guard), Is.False, "first sighting at the side");
+
+            int frames = 1;
+            while (!Sees(guard) && frames < 60)
+                frames++;
+            Assert.That(frames * Frame, Is.InRange(GuardSideNotice.DelaySeconds - Frame, GuardSideNotice.DelaySeconds + 3f * Frame));
+        }
+
+        [Test]
+        public void APlayerBeyondHalfRangeAtTheSideIsNeverSeen()
+        {
+            Guard guard = GuardAtOrigin();
+            _rig.MakeIntruder(new Vector3(20f, PivotAboveFeet, 5f)); // 76 degrees off and 20 m: past half of 31.5 m
+            for (int i = 0; i < 60; i++)
+                Assert.That(Sees(guard), Is.False);
+        }
+
+        [Test]
+        public void APlayerInsideTwoAndAHalfMetresIsSeenAtOnceInEveryDirection()
+        {
+            Guard guard = GuardAtOrigin();
+            Transform intruder = _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, -2f));
+            Assert.That(Sees(guard), Is.True, "behind");
+
+            intruder.position = new Vector3(2f, PivotAboveFeet, 0f);
+            Assert.That(Sees(guard), Is.True, "beside");
+        }
+
+        [Test]
+        public void APlayerBehindTheGuardBeyondTwoAndAHalfMetresIsNeverSeen()
+        {
+            Guard guard = GuardAtOrigin();
+            _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, -4f));
+            for (int i = 0; i < 60; i++)
+                Assert.That(Sees(guard), Is.False);
         }
 
         [Test]
@@ -85,21 +136,62 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void ALootPieceBetweenTheGuardAndAPlayerDoesNotHideThePlayer()
+        {
+            Guard guard = GuardAtOrigin();
+            _rig.MakeWall(new Vector3(0f, 1.2f, 3f), new Vector3(4f, 4f, 0.5f)).AddComponent<LootPickup>();
+            _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 6f));
+            Assert.That(Sees(guard), Is.True);
+        }
+
+        [Test]
+        public void AnotherGuardBetweenTheGuardAndAPlayerDoesNotHideThePlayer()
+        {
+            Guard guard = GuardAtOrigin();
+            Guard other = _rig.MakeGuard(new Vector3(0f, 0f, 3f));
+            other.gameObject.AddComponent<BoxCollider>().size = new Vector3(4f, 4f, 0.5f);
+            _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 6f));
+            Assert.That(Sees(guard), Is.True);
+        }
+
+        [Test]
+        public void AnythingUnderARoomsPropsPartDoesNotHideAPlayer()
+        {
+            Guard guard = GuardAtOrigin();
+            GameObject props = new GameObject(GuardSightBlockers.PropsPartName);
+            GameObject crate = _rig.MakeWall(new Vector3(0f, 1.2f, 3f), new Vector3(4f, 4f, 0.5f));
+            crate.transform.SetParent(props.transform, true);
+            _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 6f));
+            Assert.That(Sees(guard), Is.True);
+            Object.DestroyImmediate(props);
+        }
+
+        [Test]
+        public void AWallStillHidesAPlayerWhenLootAndPropsStandBesideIt()
+        {
+            Guard guard = GuardAtOrigin();
+            _rig.MakeWall(new Vector3(0f, 3f, 3f), new Vector3(8f, 8f, 0.5f));
+            _rig.MakeWall(new Vector3(0f, 1.2f, 2f), new Vector3(4f, 4f, 0.5f)).AddComponent<LootPickup>();
+            _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 6f));
+            Assert.That(Sees(guard), Is.False);
+        }
+
+        [Test]
         public void AGuardSeesFartherThanFourteenMetresButNotWithoutLimit()
         {
             Guard guard = GuardAtOrigin();
-            Transform intruder = _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 18f));
-            Assert.That(Sees(guard), Is.True, "18 m is in range");
+            Transform intruder = _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 25f));
+            Assert.That(Sees(guard), Is.True, "25 m is in range (31.5 m while Calm, #486)");
 
-            intruder.position = new Vector3(0f, PivotAboveFeet, 25f);
-            Assert.That(Sees(guard), Is.False, "25 m is out of range while Calm");
+            intruder.position = new Vector3(0f, PivotAboveFeet, 35f);
+            Assert.That(Sees(guard), Is.False, "35 m is out of range while Calm");
         }
 
         [Test]
         public void TheAlarmStretchesHowFarAGuardSees()
         {
             Guard guard = GuardAtOrigin();
-            _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 25f));
+            _rig.MakeIntruder(new Vector3(0f, PivotAboveFeet, 35f));
             Assert.That(Sees(guard), Is.False, "out of range while Calm");
 
             _rig.Director.SetAlarmLevel(60f, 3); // Roused needs three witnesses (#259)

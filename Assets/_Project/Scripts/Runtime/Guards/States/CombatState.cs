@@ -104,6 +104,7 @@ namespace Plunderspell.Guards
 
             _target = seen;
             _lastSeenSpot = seen.position;
+            Context.LastKnown.Sighted(seen, _lastSeenSpot);
             _secondsSinceSeen = 0f;
         }
 
@@ -125,6 +126,7 @@ namespace Plunderspell.Guards
         private State<Guard> GiveUp()
         {
             Context.Leads.Offer(_lastSeenSpot, GuardLeads.SightingStrength);
+            Context.LastKnown.Hunt(_target);
             return Context.States.Investigate;
         }
 

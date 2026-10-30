@@ -302,6 +302,11 @@ every legacy behaviour (keep / change / drop, with re-add issues): `docs/plans/g
   block swaps it for a fresh one (`PatrolState.cs:91`). The route is `States/GuardPatrolRoute.cs`.
   `GuardNavigationService.Map` (`GuardNavigationService.cs:50`) exposes the map to states. Numbers are in
   `GuardTuning` ("Patrol").
+- **A guard loses you only when you are rooms away (#487).** `Core/GuardLastKnown.cs` (`Guard.LastKnown`) keeps each player's
+  last-known spot and heading, set by Chase and Combat sightings. A guard that loses a player (`Chase`/`Combat` `GiveUp` calls `Hunt`) searches in
+  `InvestigateState.FinishLook`: the spot, then 6 m legs along the heading, looking round at each stop. It returns to Patrol only when
+  `GuardLastKnown.MayGiveUp` is true: 8 s with no sighting or new lead, and `IGuardNavigationMap.RoomsBetween(guard, spot)` of 3 or more
+  (-1, no route, counts as far). Noise-only investigations are unchanged. Play-mode tests: `GuardLastKnownTests`.
 - **Leads and Investigate (#208).** `Core/GuardLeads.cs` (`Guard.Leads`, `Guard.cs:54`, built `:99`) holds the one
   strongest waiting lead: a noise (`GuardHearing.NoiseNoticed`, strength 0-1, `GuardLeads.cs:33`), the director's hue
   and cry (`GuardDirectorLink.InvestigateRequested`, strength 2, `GuardLeads.cs:32`) or a new sighting (strength 3,
@@ -463,3 +468,29 @@ Only a guard whose `GuardTuning.TrueForm.CanTurn` is set turns (the Lantern Ward
   Wick's Animator speed follows the guard's real movement (the one per-frame piece, marked in the code).
 - **Built by** `Plunderspell > Fear > Build The Wick` (`Editor/WickPrefabForge.cs`) and `Build The Warden's Turn`
   (`Editor/WardenTurnForge.cs`). Tests: `Tests/Runtime/GuardTrueFormTests.cs`. Co-op check: `Tools/Unity/fear_wick_check.sh`.
+
+## Guard awareness (#479) — approved 2026-10-28, not built yet
+
+Why the old rules failed, cited to code: `docs/generated/guard-deep-dive-2026-10-28/findings.md`. Approved design:
+`docs/plans/guard-awareness.html` (1A 2A 3A 4A 5A). Each step below is its own issue; this section is updated as each lands.
+
+- **No route (#481).** A failed route to the player or a lead sends the guard to the reachable floor nearest the
+  target. Investigate no longer gives up and Chase no longer stands at an edge. A melee guard that still cannot get
+  there holds below (#237). The map is asked through a new read-only method on `IGuardNavigationMap`, answered by
+  `CastleGuardNavigationMap`; the #478 nav files are not changed.
+- **Sight blockers (#482).** Only castle stone blocks the eye: walls, roofs, floors and doors. Loot, guards and
+  anything under a room's `Props` part (`Editor/RoomPartSplitter.cs:18`) do not.
+- **Look-around and turning (#483).** A standing guard (at an investigated spot or a patrol pause) turns 60 degrees
+  left, then 60 degrees right. A heard noise turns it toward where the sound reached it before it walks.
+- **Cone (#484).** Three layers: centre 110 degrees at full range, seen at once; sides to 180 degrees at half range,
+  noticed after 0.4 s in view; a 2.5 m circle all round.
+- **Hearing (#485).** A 0.3 m sphere cast from the guard toward the source. Clear: the lead is the source. Blocked:
+  the lead is the first doorway or hole on the route toward the source, plus a direction back to the source.
+- **Range (#486).** `GuardBrain.BaseSightScale` 1.5 becomes 2.25. Guards hear from 1.5 times a noise's radius; the
+  alarm keeps the old radius.
+- **Losing a player (#487).** A last-known spot and heading per player, fed by sight, noise and other guards. Patrol
+  resumes only after 8 s with nothing new and the spot 3 or more rooms away.
+- **Aggression (#488).** `ChaseSpeed` 5.5 m/s; `GuardBrain.MoveSpeed` (alarm bonus) used for every move;
+  `AttackTurnTuning.MeleeTurnsPerTarget` 2; cry and hue-and-cry leads followed at chase speed.
+- **Unchanged.** The 20 s arrival grace, the state set, the sight throttle, the attack-turn director and the stone throw.
+- **Checks.** A recorded co-op baseline (#480) before any change and the same run after (#489).

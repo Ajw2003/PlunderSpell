@@ -169,7 +169,7 @@ MonoBehaviour:
   _hueAndCryWitnesses: 5
   _hueAndCryRepeatSeconds: 3
   _attackTurnTuning:
-    MeleeTurnsPerTarget: 1
+    MeleeTurnsPerTarget: 2
     RangedTurnsPerTarget: 1
     TurnTimeoutSeconds: 3
   _navigationTuning:

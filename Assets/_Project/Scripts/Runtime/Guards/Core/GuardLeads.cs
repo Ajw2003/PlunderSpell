@@ -26,16 +26,31 @@ namespace Plunderspell.Guards
         private Vector3 _position;
         private float _strength;
 
-        private readonly Func<System.Random> _random;
+        private Vector3 _heading;
+        private bool _hasHeading;
 
-        public GuardLeads(GuardDirectorLink link, GuardHearing hearing, Func<System.Random> random)
+        private readonly Func<System.Random> _random;
+        private readonly GuardSoundApproach _approach;
+
+        public GuardLeads(GuardDirectorLink link, GuardHearing hearing, GuardSoundApproach approach, Func<System.Random> random)
         {
             _random = random;
+            _approach = approach;
             // The link applies its radius rule before it raises this; the hue and cry has none.
             link.InvestigateRequested += position => Offer(Roughly(position), HueAndCryStrength);
             // A cry leads to where the crier stood when it saw the intruder (the cry carries no spot of its own).
             hearing.CryHeard += origin => Offer(origin, CryStrength);
-            hearing.NoiseNoticed +=(origin, strength) => Offer(origin, Mathf.Clamp01(strength) * LoudestNoiseStrength);
+            hearing.NoiseNoticed += OfferNoise;
+        }
+
+        // A wall between guard and sound means the lead is the doorway the sound came in by, facing back to the source (#485).
+        private void OfferNoise(Vector3 origin, float strength)
+        {
+            float leadStrength = Mathf.Clamp01(strength) * LoudestNoiseStrength;
+            if (_approach.TryFindEntry(origin, out Vector3 entry, out Vector3 heading))
+                Offer(entry, leadStrength, heading);
+            else
+                Offer(origin, leadStrength);
         }
 
         // The hue and cry knows only roughly where a player is, so a player who breaks away and hides
@@ -62,7 +77,25 @@ namespace Plunderspell.Guards
             HasLead = true;
             _position = position;
             _strength = strength;
+            _hasHeading = false;
         }
+
+        /// <summary>As <see cref="Offer(Vector3, float)"/>, for a doorway: the guard should face <paramref name="heading"/> (a flat direction) once there.</summary>
+        public void Offer(Vector3 position, float strength, Vector3 heading)
+        {
+            if (HasLead && strength < _strength)
+                return;
+
+            Offer(position, strength);
+            _heading = heading;
+            _hasHeading = true;
+        }
+
+        /// <summary>True when the waiting lead is a doorway with a direction to face there.</summary>
+        public bool HasHeading => HasLead && _hasHeading;
+
+        /// <summary>The direction to face at the lead's spot. Only meaningful while <see cref="HasHeading"/>.</summary>
+        public Vector3 Heading => _heading;
 
         /// <summary>Hands over the waiting lead and forgets it.</summary>
         public Vector3 Take()

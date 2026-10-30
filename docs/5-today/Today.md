@@ -6,6 +6,12 @@ mid-drain), the Ophan swings round the castle to face its target, and the wall b
 a hit costs 5 to 14 ms per room and the guard map refresh 7 to 24 ms; the stutter is debris effects redrawing every hit
 part's triangles every frame (75 effects, 284,544 vertices after 16 hits). Page: `docs/plans/ophan-breaking-chunks.html`.
 The guard deep dive runs in its own session on `guard-deep-dive`.
+**2026-10-28 (evening) - guard awareness built, awaiting aj's QA (#479: #480 to #489; `AjsAgent/guard-deep-dive-0031e3`).**
+Every approved pick is in (see `docs/3-state/ProjectState.md`). Found on the way: at 5.5 m/s a melee guard reached the
+foot of a ledge before it confirmed the player was out of reach and lost them overhead; Chase now holds below and
+HoldBelow steps back into view (`HoldBelowState.StepBackIntoView`). A last-known hunt whose search legs dead-end ends
+after 40 quiet seconds (`GuardLastKnown.MayGiveUp`, a stop-gap to revisit after QA). PlayMode 569/569; EditMode guard
+tests pass except the three `GuardClimbsTheStairToItsGallery` cases, which failed the same way before #481.
 
 **2026-10-27 (late night) - Ophan redo built, recorded, awaiting aj's hand test (#468: #469 to #472; `AjsAgent/gym-with-demand-page`).**
 The beam aims at the chest from the eye bone; the charged beam fires twice (break, then kill 1 s later). Every castle

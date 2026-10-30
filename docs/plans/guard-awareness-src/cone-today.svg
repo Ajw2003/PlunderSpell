@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" font-family="sans-serif" font-size="13">
+<rect width="400" height="300" fill="#14120E"/>
+<text x="16" y="24" fill="#DCD2BA" font-size="15">Today: one flat wedge</text>
+<path d="M200 230 L72 50 A215 215 0 0 1 328 50 Z" fill="#2E4C41" stroke="#5FA288"/>
+<circle cx="200" cy="230" r="10" fill="#DCD2BA"/><text x="214" y="250" fill="#9A9078">guard</text>
+<circle cx="250" cy="250" r="7" fill="#C4542E"/><text x="262" y="262" fill="#C4542E">unseen at 2 m</text>
+<rect x="170" y="120" width="40" height="22" fill="#332D22" stroke="#9A9078"/><circle cx="190" cy="100" r="7" fill="#C4542E"/>
+<text x="216" y="106" fill="#C4542E">crate hides player</text>
+<text x="16" y="285" fill="#9A9078">110° wide, 21 m when Calm. Instant inside, nothing outside.</text>
+</svg>

@@ -106,7 +106,7 @@ namespace Plunderspell.Guards
         /// Multiplies every guard's serialized sight range (14 m on the prefabs), so guards see farther than they
         /// did (owner, 2026-10-02) without editing each prefab and keeping the differences between guard kinds.
         /// </summary>
-        public const float BaseSightScale = 1.5f;
+        public const float BaseSightScale = 2.25f;
 
         // The field of view is the side-to-side angle: height alone never takes a player out of the cone.
         // Straight above or below the guard there is no side-to-side angle, so that counts as in front.

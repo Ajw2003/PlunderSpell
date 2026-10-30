@@ -32,6 +32,20 @@ namespace Plunderspell.Tests.Editor
 
         public bool IsWalkClear(Vector3 from, Vector3 to, float halfWidth) => true;
 
+        public bool TryFindNearestReachable(Vector3 from, Vector3 target, out Vector3 reachable)
+        {
+            reachable = target;
+            return true;
+        }
+
+        public bool TryFindFirstDoorway(Vector3 from, Vector3 to, out Vector3 doorway)
+        {
+            doorway = to;
+            return false;
+        }
+
+        public int RoomsBetween(Vector3 from, Vector3 to) => 0;
+
         public bool TryGetFloorHeight(Vector3 position, out float floorHeight)
         {
             floorHeight = 0f;

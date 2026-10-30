@@ -578,7 +578,7 @@ MonoBehaviour:
   _rousedChasers: 3
   _hueAndCryChasers: 5
   _attackTurnTuning:
-    MeleeTurnsPerTarget: 1
+    MeleeTurnsPerTarget: 2
     RangedTurnsPerTarget: 1
     TurnTimeoutSeconds: 3
   _navigationTuning:
@@ -1707,7 +1707,7 @@ MonoBehaviour:
   _rousedChasers: 3
   _hueAndCryChasers: 5
   _attackTurnTuning:
-    MeleeTurnsPerTarget: 1
+    MeleeTurnsPerTarget: 2
     RangedTurnsPerTarget: 1
     TurnTimeoutSeconds: 3
   _navigationTuning:

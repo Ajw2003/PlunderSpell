@@ -6,10 +6,12 @@ using UnityEngine;
 namespace Plunderspell.Guards
 {
     /// <summary>
-    /// What a guard can see: the cone, the range, the arrival grace and the line of sight. It looks only
+    /// What a guard can see: the cone in three layers (<see cref="GuardSightCone"/>, the side delay in
+    /// <see cref="GuardSideNotice"/>), the range, the arrival grace and the line of sight. It looks only
     /// when <see cref="GuardSightThrottle"/> says so and keeps the answer until the next look, so a
     /// state asking "who do I see" every frame costs nothing. The line of sight ignores the target's
-    /// own colliders, so a player's body never hides the player from a guard.
+    /// own colliders, so a player's body never hides the player from a guard, and loot, guards and room props
+    /// do not block it either (<see cref="GuardSightBlockers"/>).
     /// </summary>
     public sealed class GuardSight
     {
@@ -19,6 +21,7 @@ namespace Plunderspell.Guards
         private readonly Transform _body;
         private readonly GuardTuning _tuning;
         private readonly GuardSightThrottle _throttle;
+        private readonly GuardSideNotice _sideNotice = new GuardSideNotice();
         private readonly RaycastHit[] _hits = new RaycastHit[HitBufferSize];
         private bool _closed;
         private float _lightRadius;
@@ -52,6 +55,7 @@ namespace Plunderspell.Guards
         /// </summary>
         public void Update(IReadOnlyList<Transform> intruders, AlarmState alarm, bool blind, float deltaTime)
         {
+            _sideNotice.Advance(deltaTime);
             if (_closed || blind || (alarm == AlarmState.Calm && GuardArrivalGrace.IsActive))
             {
                 Visible = null;
@@ -107,17 +111,23 @@ namespace Plunderspell.Guards
             float head = _tuning.TargetAimHeight;
             float feet = _tuning.TargetLowAimHeight;
             float middle = (head + feet) * 0.5f;
-            return CanSeePoint(eye, intruder, head, range)
-                || CanSeePoint(eye, intruder, middle, range)
-                || CanSeePoint(eye, intruder, feet, range);
+            GuardViewZone headZone = ZoneOfPoint(eye, intruder, head, range);
+            GuardViewZone middleZone = headZone == GuardViewZone.Immediate ? headZone : ZoneOfPoint(eye, intruder, middle, range);
+            GuardViewZone feetZone = middleZone == GuardViewZone.Immediate ? middleZone : ZoneOfPoint(eye, intruder, feet, range);
+            if (feetZone == GuardViewZone.Immediate)
+                return true;
+
+            // At the side of the view the guard notices only after 0.4 s (#484).
+            bool atSide = headZone == GuardViewZone.Side || middleZone == GuardViewZone.Side || feetZone == GuardViewZone.Side;
+            return atSide && _sideNotice.Notices(intruder);
         }
 
         // The cheap tests (range and angle) run before the raycast, so most points cost no cast.
-        private bool CanSeePoint(Vector3 eye, Transform intruder, float heightAbovePivot, float range)
+        private GuardViewZone ZoneOfPoint(Vector3 eye, Transform intruder, float heightAbovePivot, float range)
         {
             Vector3 aim = intruder.position + Vector3.up * heightAbovePivot;
-            return GuardBrain.CanSee(eye, _body.forward, aim, range, _tuning.FieldOfView, true)
-                && HasLineOfSight(eye, aim, intruder);
+            GuardViewZone zone = GuardSightCone.ZoneOf(eye, _body.forward, aim, range, _tuning.FieldOfView);
+            return zone != GuardViewZone.Unseen && HasLineOfSight(eye, aim, intruder) ? zone : GuardViewZone.Unseen;
         }
 
         private bool HasLineOfSight(Vector3 eye, Vector3 aim, Transform target)
@@ -131,7 +141,8 @@ namespace Plunderspell.Guards
                 _tuning.GeometryLayers, QueryTriggerInteraction.Ignore);
             for (int i = 0; i < count; i++)
             {
-                if (!_hits[i].collider.transform.IsChildOf(target))
+                Collider hit = _hits[i].collider;
+                if (!hit.transform.IsChildOf(target) && GuardSightBlockers.Blocks(hit))
                     return false;
             }
             return true;

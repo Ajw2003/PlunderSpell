@@ -9,7 +9,7 @@ namespace Plunderspell.EditorTools
     {
         public float SightRange = 14f;
         public float PatrolSpeed = 2f;
-        public float ChaseSpeed = 4.5f;
+        public float ChaseSpeed = 5.5f;
         public float MaxHealth = 100f;
         public float EyeHeight = 1.6f;
         public float BodyRadius = 0.4f;

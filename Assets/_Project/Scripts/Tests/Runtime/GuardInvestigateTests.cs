@@ -49,6 +49,109 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void AHeardNoiseTurnsTheGuardTowardItBeforeItWalks()
+        {
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            Vector3 eastNoise = new Vector3(8f, 0f, 0f);
+            Vector3 start = guard.transform.position;
+
+            guard.OnNoiseHeard(new NoiseEvent(eastNoise, 0.6f, NoiseType.VoiceCast));
+            _rig.RunNavigation(guard, 2, Step);
+
+            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Investigate));
+            Assert.That(guard.Navigator.IsMoving, Is.False, "still turning, not walking yet");
+            Assert.That(guard.transform.position, Is.EqualTo(start));
+            Assert.That(Vector3.Angle(guard.transform.forward, Vector3.right), Is.LessThan(90f), "already part way round");
+
+            _rig.RunNavigation(guard, 20, Step);
+
+            Assert.That(Vector3.Angle(guard.transform.forward, Vector3.right), Is.LessThan(1f), "facing the noise");
+            Assert.That(guard.Navigator.IsMoving, Is.True, "now walking");
+        }
+
+        [Test]
+        public void AClearLineToTheSoundSendsTheGuardStraightToIt()
+        {
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            _rig.SetDoorway(new Vector3(0f, 0f, 3f));
+
+            guard.OnNoiseHeard(new NoiseEvent(NoiseSpot, 0.6f, NoiseType.VoiceCast));
+            guard.Tick(Step);
+
+            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Investigate));
+            Assert.That(((InvestigateState)guard.CurrentState).Spot, Is.EqualTo(NoiseSpot), "no wall, so the sound itself");
+        }
+
+        [Test]
+        public void AWallInTheWayTakesTheGuardToTheDoorwayFacingTheSource()
+        {
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            _rig.MakeWall(new Vector3(0f, 0f, 4f), new Vector3(8f, 4f, 0.2f));
+            Physics.SyncTransforms();
+            Vector3 doorway = new Vector3(5f, 0f, 4f);
+            _rig.SetDoorway(doorway);
+
+            guard.OnNoiseHeard(new NoiseEvent(NoiseSpot, 0.6f, NoiseType.VoiceCast));
+            guard.Tick(Step);
+
+            Assert.That(guard.CurrentState, Is.SameAs(guard.States.Investigate));
+            Assert.That(((InvestigateState)guard.CurrentState).Spot, Is.EqualTo(doorway), "the doorway, not the sound");
+
+            bool arrived = false;
+            guard.Navigator.Reached += at => arrived = true;
+            for (int step = 0; step < StepsToFinishALook && !arrived; step++)
+                _rig.RunNavigation(guard, 1, Step);
+            _rig.RunNavigation(guard, 60, Step);
+
+            Vector3 towardSource = (NoiseSpot - doorway).normalized;
+            Assert.That(arrived, Is.True, "it reached the doorway");
+            Assert.That(Vector3.Angle(guard.transform.forward, towardSource), Is.LessThan(GuardLookAround.SweepDegrees + 1f),
+                "looking about from the direction of the source");
+        }
+
+        [Test]
+        public void AtTheSpotTheGuardLooksSixtyDegreesLeftThenRight()
+        {
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            guard.OnNoiseHeard(new NoiseEvent(NoiseSpot, 0.6f, NoiseType.VoiceCast));
+            bool arrived = false;
+            float arrivalYaw = 0f;
+            guard.Navigator.Reached += at =>
+            {
+                arrived = true;
+                arrivalYaw = guard.transform.eulerAngles.y;
+            };
+            float leftMost = 0f;
+            float rightMost = 0f;
+            int leftAt = -1;
+            int rightAt = -1;
+
+            for (int step = 0; step < StepsToFinishALook; step++)
+            {
+                _rig.RunNavigation(guard, 1, Step);
+                if (!arrived)
+                    continue;
+                if (guard.CurrentState != guard.States.Investigate)
+                    break; // back on patrol, it turns to walk away; the look is over
+                float turned = Mathf.DeltaAngle(arrivalYaw, guard.transform.eulerAngles.y);
+                if (turned < leftMost)
+                {
+                    leftMost = turned;
+                    leftAt = step;
+                }
+                if (turned > rightMost)
+                {
+                    rightMost = turned;
+                    rightAt = step;
+                }
+            }
+
+            Assert.That(leftMost, Is.EqualTo(-GuardLookAround.SweepDegrees).Within(1f), "looked left");
+            Assert.That(rightMost, Is.EqualTo(GuardLookAround.SweepDegrees).Within(1f), "looked right");
+            Assert.That(leftAt, Is.LessThan(rightAt), "left first");
+        }
+
+        [Test]
         public void TheDirectorsInvestigateRequestSendsAGuardInRange()
         {
             Guard guard = _rig.MakeGuard(Vector3.zero);
@@ -150,7 +253,7 @@ namespace Plunderspell.Tests
             Assert.That(guard.CurrentState, Is.SameAs(guard.States.Patrol), "the weaker noise is forgotten, not queued");
         }
 
-        [TestCase(BlockedReason.Unreachable)]
+        // An Unreachable spot now sends the guard the long way round (#481); GuardNoRouteTests covers that.
         [TestCase(BlockedReason.DoorClosed)]
         public void AnUnreachableSpotMakesTheGuardGiveUpAndPatrol(BlockedReason reason)
         {

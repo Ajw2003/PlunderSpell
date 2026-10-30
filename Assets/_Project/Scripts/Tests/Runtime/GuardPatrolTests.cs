@@ -57,6 +57,47 @@ namespace Plunderspell.Tests
         }
 
         [Test]
+        public void AtEachPatrolPauseTheGuardLooksSixtyDegreesLeftThenRight()
+        {
+            Guard guard = _rig.MakeGuard(Vector3.zero);
+            PlanRound(guard);
+            bool arrived = false;
+            float arrivalYaw = 0f;
+            guard.Navigator.Reached += at =>
+            {
+                arrived = true;
+                arrivalYaw = guard.transform.eulerAngles.y;
+            };
+            for (int step = 0; step < StepsPerRound && !arrived; step++)
+                _rig.RunNavigation(guard, 1, Step);
+            Assert.That(arrived, Is.True, "reached the first point");
+            float leftMost = 0f;
+            float rightMost = 0f;
+            int leftAt = -1;
+            int rightAt = -1;
+
+            for (int step = 0; step < 20; step++) // the one second pause
+            {
+                _rig.RunNavigation(guard, 1, Step);
+                float turned = Mathf.DeltaAngle(arrivalYaw, guard.transform.eulerAngles.y);
+                if (turned < leftMost)
+                {
+                    leftMost = turned;
+                    leftAt = step;
+                }
+                if (turned > rightMost)
+                {
+                    rightMost = turned;
+                    rightAt = step;
+                }
+            }
+
+            Assert.That(leftMost, Is.EqualTo(-GuardLookAround.SweepDegrees).Within(1f), "looked left");
+            Assert.That(rightMost, Is.EqualTo(GuardLookAround.SweepDegrees).Within(1f), "looked right");
+            Assert.That(leftAt, Is.LessThan(rightAt), "left first");
+        }
+
+        [Test]
         public void ABlockedWalkSwapsTheOldPointForAnotherOne()
         {
             Guard guard = _rig.MakeGuard(Vector3.zero);

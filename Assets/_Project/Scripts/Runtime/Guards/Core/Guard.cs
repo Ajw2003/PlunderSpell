@@ -23,7 +23,7 @@ namespace Plunderspell.Guards
     /// docs/plans/guard-core-inventory.md.
     /// </summary>
     [RequireComponent(typeof(StatusEffectReceiver), typeof(GuardDeathPlayback))]
-    public class Guard : NetworkBehaviour, INoiseListener, IHealth, IShovable
+    public class Guard : NetworkBehaviour, INoiseListener, IFarHearingListener, IHealth, IShovable
     {
         [SerializeField] private GuardTuning _tuning = new GuardTuning();
 
@@ -83,6 +83,9 @@ namespace Plunderspell.Guards
 
         /// <summary>What is worth a look (noise, sighting, hue and cry). Patrol and Investigate read it (#208).</summary>
         public GuardLeads Leads { get; private set; }
+
+        /// <summary>Where each player was last known to be and which way they went; Investigate searches from it (#487).</summary>
+        public GuardLastKnown LastKnown { get; private set; }
         public GuardStateSet States { get; private set; }
 
         /// <summary>The cry for help on a first sighting (#259).</summary>
@@ -138,7 +141,8 @@ namespace Plunderspell.Guards
             AttackTurn = new GuardAttackTurn(this);
             Reach = new GuardReachability(this);
             _ = new GuardHelpResponse(this);
-            Leads = new GuardLeads(Link, Hearing, () => Random);
+            Leads = new GuardLeads(Link, Hearing, new GuardSoundApproach(this), () => Random);
+            LastKnown = new GuardLastKnown();
             Cry = new GuardCry(this);
             Hearing.NoiseHeard += (origin, strength) => EventManager.Instance?.Publish(new NoiseReported(this, origin, strength));
             _shove = new GuardShove(transform, _tuning);

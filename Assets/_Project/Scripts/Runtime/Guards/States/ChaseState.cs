@@ -25,9 +25,13 @@ namespace Plunderspell.Guards
         private float _secondsToRetarget;
         private bool _inReach;
         private bool _alreadySpotted;
+        private readonly GuardNearestReachableWalk _detour;
+        private bool _onDetour;
+        private bool _holdBelowDue;
 
         public ChaseState(Guard guard) : base(guard)
         {
+            _detour = new GuardNearestReachableWalk(guard);
         }
 
         public override GuardAlertState AlertState => GuardAlertState.Chasing;
@@ -52,8 +56,12 @@ namespace Plunderspell.Guards
         public override void Enter()
         {
             _lastSeenSpot = _target.position;
+            Context.LastKnown.Sighted(_target, _lastSeenSpot);
             _secondsSinceSeen = 0f;
             _inReach = false;
+            _holdBelowDue = false;
+            Context.Navigator.RouteBlocked += OnBlocked;
+            Context.Navigator.Reached += OnReached;
             MoveToward(_lastSeenSpot);
             if (!_alreadySpotted)
                 Context.Cry.Raise();
@@ -62,6 +70,8 @@ namespace Plunderspell.Guards
 
         public override void Exit()
         {
+            Context.Navigator.RouteBlocked -= OnBlocked;
+            Context.Navigator.Reached -= OnReached;
             Context.Navigator.Stop();
             EventManager.Instance?.Publish(new IntruderLost(Context, _lastSeenSpot));
         }
@@ -81,9 +91,11 @@ namespace Plunderspell.Guards
 
             _target = seen;
             _lastSeenSpot = seen.position;
+            Context.LastKnown.Sighted(seen, _lastSeenSpot);
             _secondsSinceSeen = 0f;
             // A melee guard that cannot get at the player stops chasing and throws instead (#237).
-            if (!Context.RangedAttack.IsRanged && Context.Reach.IsUnreachable(seen, deltaTime))
+            // Also when the route failed and the nearest reachable floor did not get it any closer (#481).
+            if (!Context.RangedAttack.IsRanged && (Context.Reach.IsUnreachable(seen, deltaTime) || _holdBelowDue))
             {
                 Context.States.HoldBelow.Hold(seen);
                 return Context.States.HoldBelow;
@@ -101,6 +113,13 @@ namespace Plunderspell.Guards
         {
             _secondsSinceSeen += deltaTime;
             _inReach = false;
+            // At chase speed (#488) a melee guard reaches the foot of a ledge before the reach check confirms,
+            // then loses the player overhead; it still knows they were up there, so it holds below.
+            if (!Context.RangedAttack.IsRanged && Context.Reach.IsUnreachable(_target, deltaTime))
+            {
+                Context.States.HoldBelow.Hold(_target);
+                return Context.States.HoldBelow;
+            }
             return _secondsSinceSeen >= Context.Tuning.ChaseLoseSightSeconds ? GiveUp() : this;
         }
 
@@ -108,6 +127,7 @@ namespace Plunderspell.Guards
         {
             // The strongest lead, so Investigate goes straight to the last seen spot.
             Context.Leads.Offer(_lastSeenSpot, GuardLeads.SightingStrength);
+            Context.LastKnown.Hunt(_target);
             return Context.States.Investigate;
         }
 
@@ -124,8 +144,27 @@ namespace Plunderspell.Guards
                 MoveToward(_lastSeenSpot);
         }
 
+        // No route to the player: walk to the nearest floor the guard can reach. If it is already there
+        // (or that walk fails too) a melee guard holds below; a ranged one keeps shooting from where it is.
+        private void OnBlocked(Blocked blocked)
+        {
+            if (!GuardNearestReachableWalk.IsMissingRoute(blocked))
+                return;
+
+            _onDetour = !_onDetour && _detour.TryStart(_lastSeenSpot, Context.Tuning.ChaseSpeed, MoveReason.Chase);
+            _holdBelowDue = !_onDetour;
+        }
+
+        // Having walked the long way round, try the player again from here.
+        private void OnReached(Arrived arrived)
+        {
+            if (_onDetour)
+                MoveToward(_lastSeenSpot);
+        }
+
         private void MoveToward(Vector3 spot)
         {
+            _onDetour = false;
             _secondsToRetarget = Context.Tuning.ChaseRetargetSeconds;
             Context.Navigator.MoveTo(spot, Context.Tuning.ChaseSpeed, MoveReason.Chase);
         }

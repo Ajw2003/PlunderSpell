@@ -32,7 +32,7 @@ namespace Plunderspell.Guards
 
         [Header("Movement")]
         public float PatrolSpeed = 2.0f;
-        public float ChaseSpeed = 4.5f;
+        public float ChaseSpeed = 5.5f;
 
         [Header("Patrol")]
         [Tooltip("Points a patrol round walks. At least 3 so the guard never just paces between two.")]

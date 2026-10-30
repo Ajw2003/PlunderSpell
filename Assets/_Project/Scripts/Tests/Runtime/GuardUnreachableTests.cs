@@ -88,6 +88,9 @@ namespace Plunderspell.Tests
             GuardCoreRig.Victim player = _rig.MakeVictim(Ledge);
             _rig.StepTogether(80, Step, guard);
             Assert.That(guard.CurrentState, Is.SameAs(guard.States.HoldBelow), "set-up: it was holding below");
+            // Physics does not run in this rig, so thrown stones hang in the air where they were thrown and would
+            // block the guard's walk back in; in the game they fall and expire.
+            DestroyAll("GuardStone(Clone)");
 
             int throwsAfterwards = 0;
             guard.AttackSignal.Attacked += kind => { if (kind == GuardAttackKind.Projectile) throwsAfterwards++; };
