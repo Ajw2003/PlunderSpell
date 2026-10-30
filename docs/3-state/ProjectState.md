@@ -29,6 +29,11 @@ the unused two-person code is still in `LootPickup` (`InitiateDualCarry`) and
 
 ## Work not on `main` yet
 
+**Backup, 2026-10-29: `AjsAgent/backup-playable-2026-10-29`** (commit 4bb53171, cut from
+`AjsAgent/gym-with-demand-page`). aj's hand test: playable through, with the Lair scene split, the loading card
+covering both directions, loot syncing, saving and travelling, and the haul pile at the far end of the Lair. Kept as
+a fallback before the closing portal, the guard merge and the debt removal. Leave it untouched.
+
 **Current, checked 2026-10-11 by patch content (`git cherry`) against every branch.** The real
 baseline is **`claude/staging-2026-10-11`**: `claude/merge-2026-10-08` (PR #370, tracked by #368)
 plus the wizard plan docs (#349). `main` is 189 commits behind it and has nothing it lacks. It
