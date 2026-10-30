@@ -1,6 +1,6 @@
 {
  "title": "Escape portal build plan",
- "eyebrow": "How the arrival portal will close and the hidden escape portal will open, as you approved on 2026-10-29 (picks 1A, 2A, 3A, and your own answer to 4)",
+ "eyebrow": "How the arrival portal will close and the hidden escape portal will open, as you approved on 2026-10-29 (the farthest third of the castle, open for the last minute, glow seen only nearby, and a 4-second countdown that strands anyone not on the pad)",
  "approval": "Build plan approved: hidden escape portal",
  "short": {
   "lead": "The portal stays one object, the ExtractionZone, and it moves: open at the arrival for the first 20 seconds, closed, then open in a room deep in the castle for the last minute, as the Ophan arrives. Every machine already has the raid clock, so each one decides open, closed and where from the clock and the raid seed, and nothing new is sent over the network. Leaving reuses today's countdown, cut from 8 seconds to 4. The sounds already exist in the project. Four build steps, then a recorded co-op run. One choice is yours.",
@@ -8,32 +8,32 @@
   "key": [["Settled", ""], ["You pick", "you"]],
   "items": [
    ["bulb", "Close", "The arrival portal closes at 20 seconds", "",
-    "Issue #552. When 20 seconds of the raid have passed (the guards' grace, GuardArrivalGrace), the portal at the arrival closes on every machine: its look goes out with the existing collapse sound (sfx_portal_collapse_01), and standing in its spot starts no countdown. An editor test checks the open and closed rule against the time elapsed.",
+    "Issue #552. When 20 seconds of the raid have passed (the guards' grace period, GuardArrivalGrace), the portal at the arrival closes on every machine. It disappears with the existing collapse sound (sfx_portal_collapse_01), and standing where it was starts no leaving countdown. An editor test checks the open and closed rule against the time elapsed.",
     "No choice here."],
    ["bulb", "Room", "Choosing the escape room", "",
     "Issue #553. When the castle is built, behind the loading card, every machine ranks the rooms by walking distance from the arrival along the guards' map (CastleNavGraph) and picks one of the farthest third with the raid seed. It is never the arrival room. An editor test checks that the same seed gives the same room and that the room is in the farthest third; host and client log the room they picked.",
     "No choice here."],
    ["bulb", "Open", "The escape portal opens as the Ophan arrives", "",
-    "Issue #554. With 60 seconds left, the moment the Ophan arrives, the portal moves to the chosen room and opens with the portal-opened sting. It plays the existing portal hum (amb_portal_loop_01) as a 3D sound that grows louder as you get nearer, and its light lights its room and spills through open doorways, with no beam above the roofs.",
+    "Issue #554. With 60 seconds left, the moment the Ophan arrives, the portal moves to the chosen room and opens with the portal-opened sound. It plays the existing portal hum (amb_portal_loop_01) as a 3D sound that grows louder as you get nearer, and its light lights its room and spills through open doorways, with no beam above the roofs.",
     "Pick how far away the hum can be heard, under Choices."],
    ["bulb", "Leave", "Leaving, and leaving your friends behind", "",
     "Issue #555. Standing in the escape portal runs a 4-second countdown (now 8). When it ends, everyone on the pad leaves with what is in the portal, the raid ends and the portal closes. Anyone not on the pad is left behind, which the game already counts and the Lair's last-raid line already reports.",
     "No choice here."],
    ["eye", "Check", "Recorded co-op run", "",
-    "Issue #556. One recorded raid with the Editor hosting and a built client, both windows in the recording: the arrival portal closing at 20 seconds, the escape portal opening in the same room on both, one player leaving and the other left behind. I read it frame by frame, then send you a QA page with the clips.",
+    "Issue #556. One raid is recorded with the Editor hosting and a built client, both windows in view. It shows the arrival portal closing at 20 seconds, the escape portal opening in the same room on both, and one player leaving while the other is left behind. I read it frame by frame, then send you a QA page with the clips.",
     "No choice here."]
   ]
  },
  "changes": [
-  ["chg", "The portal", "One ExtractionZone that moves.", ["Open at the arrival for the whole raid", "Open at the arrival for 20 s, closed, then open deep in the castle for the last minute"], "ExtractionZone.cs, RaidDirector.cs (OpenPortal), PortalGlow.cs.", null],
+  ["chg", "The portal", "One ExtractionZone that moves.", ["Open at the arrival for the whole raid", "Open at the arrival for 20 seconds, closed, then open deep in the castle for the last minute"], "ExtractionZone.cs, RaidDirector.cs (OpenPortal), PortalGlow.cs.", null],
   ["new", "Escape room chooser", "Picks the room from the seed.", ["None", "The farthest third by walking distance, never the arrival"], "A new small class beside CastleArrivalPlanner, with its editor test.", null],
-  ["chg", "Leaving countdown", "Shorter.", ["8 seconds", "4 seconds"], "GameServices.cs.", null],
+  ["chg", "Leaving countdown", "A shorter countdown.", ["8 seconds", "4 seconds"], "GameServices.cs.", null],
   ["keep", "Unchanged", "Used as they are.", null, "The raid clock, the Ophan's arrival time, the left-behind count, the Lair's last-raid line, the loading card and the scene split.", null]
  ],
  "choices": [
   ["hum", "How far away can the hum be heard?", [
-   ["A", "Faintly across most of the castle", 1, "Heard up to about 60 m away, very quiet at that range and loud close up. You can tell which way to go from anywhere, and it grows as you close in."],
-   ["B", "Only from nearby rooms", 0, "Heard up to about 25 m away. Far away you hear nothing, so you have to search before the sound helps."]
+   ["A", "Faintly across most of the castle", 1, "Heard up to 60 m away (the sound's maximum distance setting), very quiet at that range and loud close up. You can tell which way to go from anywhere, and it grows as you close in."],
+   ["B", "Only from nearby rooms", 0, "Heard up to 25 m away (the same setting). Far away you hear nothing, so you have to search before the sound helps."]
   ], "I suggest A: you asked for a sound that grows louder as you get closer, which helps most if it can be heard from the start."]
  ],
  "wrapup": {
