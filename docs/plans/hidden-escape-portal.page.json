@@ -1,0 +1,65 @@
+{
+ "title": "The portal closes; a hidden one opens",
+ "eyebrow": "Your ask on 2026-10-29: the arrival portal closes after the 20-second grace, and a second portal opens somewhere deep in the castle as the Ophan arrives",
+ "approval": "Design approved: hidden escape portal",
+ "short": {
+  "lead": "Today the portal you arrive by is also the way out, and it stays open for the whole raid. A raid lasts 5 minutes (300 s, set in OphanDemandTuning). Guards hold off for the first 20 seconds (set in GuardArrivalGrace). The Ophan arrives with 1 minute left. Standing in the portal starts an 8-second leaving countdown, after which everyone in it leaves with what is inside. So a team can leave whenever it likes, before the Ophan ever arrives. This page keeps the portal, the leaving countdown and the clock. It changes where the portal is and when it is open. You need to make four picks, listed under Choices.",
+  "hint": "Tap an item to see what I found in the code, or what you need to pick.",
+  "key": [["Found in the code", ""], ["You pick", "you"]],
+  "items": [
+   ["search", "Today", "How leaving works now", "",
+    "The portal is the ExtractionZone, stood on the arrival point by RaidDirector.OpenPortal. Standing in it runs the 8-second leaving countdown (ExtractionController). When the 5-minute clock runs out, whoever is outside the portal is left behind and loses what they carry.",
+    "Nothing to pick."],
+   ["stop", "Closes", "The arrival portal closes after 20 seconds", "",
+    "As you asked: when the 20-second grace ends, the arrival portal closes for good, with its warning sting. Until then you can step back out, which keeps a way home if a team arrives somewhere hopeless.",
+    "Nothing to pick."],
+   ["hand", "Where", "Where the escape portal opens", "you",
+    "It never opens where you arrived. Every machine works out the same room from the raid seed, so nothing new is sent over the network. I suggest option A under \"Where does it open?\".",
+    "Pick under Choices."],
+   ["hand", "When", "How long it stays open", "you",
+    "It opens as the Ophan arrives, with 1 minute left. My suggestion is option A under \"How long is it open?\".",
+    "Pick under Choices."],
+   ["hand", "Find it", "How you find it", "you",
+    "As you asked: a sound that grows louder as you get nearer, and the portal's glow. The open question is how far the glow can be seen.",
+    "Pick under Choices."],
+   ["hand", "Leaving", "What stepping in does", "you",
+    "Today, whoever is standing in the portal when the clock ends is saved. With a portal you have to race to, waiting for the clock may not suit.",
+    "Pick under Choices."]
+  ]
+ },
+ "changes": [
+  ["chg", "Arrival portal", "Closes when the guards' grace ends.", ["Open for the whole raid", "Open for the first 20 seconds, then gone"], "RaidDirector.cs (OpenPortal), ExtractionZone.cs.", null],
+  ["new", "Escape portal", "A second portal, deep in the castle, opened as the Ophan arrives.", ["None", "Opens in a room chosen from the seed, with a sound and a glow"], "RaidDirector.cs, ExtractionZone.cs, a new chooser for the room, the portal look.", null],
+  ["chg", "Raid clock", "Still 5 minutes; still ends the raid.", ["Ends the raid; whoever is in the portal is saved", "Ends the raid; whoever has not left through the escape portal is lost"], "ExtractionZone.cs.", null]
+ ],
+ "choices": [
+  ["where", "Where does it open?", [
+   ["A", "A random room among the farthest from the arrival", 1, "The rooms are ranked by walking distance from where you arrived, and the escape portal opens in one of the farthest third, picked from the seed."],
+   ["B", "Any room at least half the castle away", 0, "Wider spread: any room more than half the longest walk from the arrival. Sometimes nearer, so less punishing."],
+   ["C", "Always in the keep", 0, "The heart of the castle, at a random spot inside it. Players learn to head for the keep, so it is easier to find."]
+  ], "A matches \"deep in the castle\" and stays different every raid."],
+  ["open", "How long is it open?", [
+   ["A", "From the Ophan's arrival until the clock ends", 1, "Open for the whole last minute. Reaching it in time is hard; staying past the minute loses you."],
+   ["B", "Only 30 seconds", 0, "Opens with the Ophan and closes 30 seconds later, half way through the last minute. Harder still."]
+  ], "A is the one you described. Pick B if the last minute turns out too easy."],
+  ["glow", "How far can the glow be seen?", [
+   ["A", "Only in its room and through open doorways", 1, "The glow lights its room and spills through doors. You follow the sound until you see light."],
+   ["B", "A beam into the sky as well", 0, "A column of portal light rises above the roofs, so you can see roughly where it is from a courtyard."]
+  ], "A keeps it hard to find, as you asked; B makes it findable from outside."],
+  ["leave", "What does stepping in do?", [
+   ["A", "Starts the 8-second leaving countdown, as now", 1, "Stand in it for 8 seconds and you leave with what you carry. The Ophan can still catch you on the pad."],
+   ["B", "You leave at once", 0, "Stepping in takes you out straight away, with what you carry."]
+  ], "A reuses the leaving countdown that already exists and keeps a last tense moment."]
+ ],
+ "wrapup": {
+  "summary": "The arrival portal closes after the 20-second grace, and an escape portal opens deep in the castle when the Ophan arrives, found by sound and glow.",
+  "changing": "How a raid ends: once the arrival portal closes, there is no leaving early, and the only way out is the escape portal.",
+  "blocking": "Your four picks: where it opens, how long it is open, how far the glow is seen, and what stepping in does.",
+  "next": "Then I open a GitHub issue with one sub-issue per step, build it, and check it in co-op with a recorded run.",
+  "todo": [
+   "Pick one option in each of the four choices.",
+   "Tap <b>Copy my reply</b>.",
+   "Send it with \"Design approved: hidden escape portal\", or tell me what to change."
+  ]
+ }
+}
