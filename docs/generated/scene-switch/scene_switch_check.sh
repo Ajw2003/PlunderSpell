@@ -15,6 +15,7 @@ ev() { timeout 60 bash Tools/Unity/eval.sh "$@" 2>&1 | tail -1; }
 cleanup() {
     say "cleaning up"
     [ -n "${rec:-}" ] && kill "$rec" 2>/dev/null
+    [ -n "${rec2:-}" ] && kill "$rec2" 2>/dev/null
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$repo/Tools/Unity/place_windows.ps1")" release >/dev/null 2>&1
     powershell.exe -NoProfile -Command "Get-Process Plunderspell -ErrorAction SilentlyContinue | Where-Object { \$_.Path -like '*$(basename "$repo")*' } | Stop-Process -Force" >/dev/null 2>&1
     sleep 2
@@ -24,12 +25,15 @@ trap cleanup EXIT
 
 bash Tools/Unity/coop_local.sh | tail -1
 say "windows: $(powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$repo/Tools/Unity/place_windows.ps1")" | tr -d '\r')"
+# The placer puts the maximized Editor on top of the client; bring the client back above it, in the bottom-left corner.
+powershell.exe -NoProfile -Command "Add-Type -Name W -Namespace U -MemberDefinition '[DllImport(\"user32.dll\")] public static extern bool SetWindowPos(System.IntPtr w, System.IntPtr a, int x, int y, int cx, int cy, uint f);'; \$c = Get-Process Plunderspell | Select-Object -First 1; [U.W]::SetWindowPos(\$c.MainWindowHandle, [System.IntPtr]-1, 0, 0, 0, 0, 0x3)" >/dev/null
 sleep 3
 say "$(ev 'var c = new UnityEngine.GameObject("PileShotCamera").AddComponent<UnityEngine.Camera>(); c.transform.position = new UnityEngine.Vector3(1000f, 4.6f, 0f); c.transform.rotation = UnityEngine.Quaternion.Euler(90f, 0f, 0f); c.fieldOfView = 100f; c.enabled = false; return "camera placed";')"
 bash Tools/Unity/capture.sh "$repo/$out/pile-from-above.png" camera PileShotCamera >/dev/null 2>&1 && say "pile photographed"
 ev 'UnityEngine.Object.Destroy(UnityEngine.GameObject.Find("PileShotCamera")); return "removed";' >/dev/null
 
-ffmpeg -v error -y -f gdigrab -framerate 30 -i desktop -t 60 -c:v libx264 -preset ultrafast "$out/run.mkv" </dev/null &
+# Desktop duplication, not gdigrab: gdigrab drew the client's DirectX window black (runs fade-1, fade-2).
+ffmpeg -v error -y -f lavfi -i "ddagrab=output_idx=0:framerate=30" -t 60 -vf "hwdownload,format=bgra" -c:v libx264 -preset ultrafast "$out/run.mkv" </dev/null &
 rec=$!
 sleep 2
 say "set out: $(ev --file Tools/Unity/eval/set_out.cs)"
