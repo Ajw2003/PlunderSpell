@@ -124,10 +124,17 @@ by the gatehouse, and nothing exists outside the curtain wall.
   the curtain wall's outer face, called from `RaidDirector.SealCastle` every raid. RaidScene's
   ground covers only the ring plus a 4 m apron.
 
-### The arrival portal closes; a hidden escape portal opens (planned, 2026-10-29)
+### The arrival portal closes; a hidden escape portal opens (built, 2026-10-29)
 
-**Status: design approved, not built** (Decisions, "Design approved: the arrival portal closes; a hidden escape portal
-opens"; `docs/plans/hidden-escape-portal.html`). Replaces "the way in is the way out" above once built.
+**Status: built, co-op checked, aj skipped QA** (Decisions, "Design approved: the arrival portal closes; a hidden
+escape portal opens"; `docs/plans/hidden-escape-portal.html`; #551 to #556). Replaces "the way in is the way out"
+above. Code: `PortalSchedule.cs` and `ExtractionZone.ApplyPortalState` (Extraction), `CastleEscapePlanner.cs` (Castle),
+`RaidDirector.PlaceEscapePortal`, the hum in `AudioDirector.StartPortalHum`, the glow in `PortalGlow`. Co-op run
+`docs/generated/escape-portal/run-4` (Editor host, built client, raid clock moved by
+`docs/generated/escape-portal/escape_check.sh`): on both machines the arrival portal was open, then closed with its
+trigger off at 20 s, then opened in the same escape room (room 37, on an upper storey) with the hum playing there, and
+a host on the pad left after the 4-second countdown and both returned to the Lair. Choosing the room took 13 to 18 ms
+per build. The clock was moved by hand, so the Ophan (timed at raid start) did not come in that run.
 
 - **Driven by the replicated clock.** Every peer already has the raid clock (`ExtractionZone._timeRemaining`, a
   SyncVar). The arrival portal is open while less than `GuardArrivalGrace.Seconds` (20 s) of the raid has passed; the

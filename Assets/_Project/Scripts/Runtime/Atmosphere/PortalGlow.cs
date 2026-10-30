@@ -46,6 +46,14 @@ namespace Plunderspell.Atmosphere
             EventManager.Instance?.Subscribe(this, (RaidPhaseChanged e) => OnPhaseChanged(e.Phase));
         }
 
+        // A client builds its castle while the raid scene is still enabling, so the portal can open before this
+        // subscribes (co-op run escape-portal/run-2: no arrival glow on the client). Start runs after the whole scene.
+        private void Start()
+        {
+            if (_director != null && _director.Castle != null && _zone != null && _zone.State != PortalState.Closed)
+                OnPortalOpened(_zone.transform.position);
+        }
+
         private void OnDisable()
         {
             EventManager.Instance?.UnsubscribeFromAllEvents(this);
