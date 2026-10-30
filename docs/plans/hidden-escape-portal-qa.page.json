@@ -1,0 +1,49 @@
+{
+ "title": "QA: the hidden escape portal",
+ "eyebrow": "Record of issue #551 (The arrival portal closes and a hidden escape portal opens) and the guard merge. You asked to skip QA, so this is for reference only",
+ "approval": "QA passed: hidden escape portal",
+ "qa": {
+  "feature": "The arrival portal closes and a hidden escape portal opens",
+  "base": "3219f0e3",
+  "unverified": [
+   "Nobody has played it by hand.",
+   "The Ophan did not come in the checks, because the raid clock was moved by hand instead of waiting 5 minutes.",
+   "Hearing the hum: the checks read that it plays at the portal with a 60 m reach, but nobody listened to it.",
+   "The last runs after the guard merge have pictures but no video, because screen recording stopped producing frames."
+  ],
+  "files": {}
+ },
+ "short": {
+  "lead": "The arrival portal closes 20 seconds into a raid. With a minute left, as the Ophan arrives, a portal opens in a room in the farthest third of the castle, the same room on every machine. It hums up to 60 m away and glows. Standing in it for 4 seconds takes out whoever is on it; anyone else is left behind. The guard work is merged in. In co-op checks both machines matched at every step, and the guard tests pass (36 editor, 185 in play).",
+  "hint": "Play a raid in co-op with bash Tools/Unity/coop_local.sh; each item says what you should see.",
+  "key": [["Built and tested by code", "done"], ["You play it", "you"]],
+  "items": [
+   ["play", "Close", "The arrival portal closes at 20 seconds", "you",
+    "Set out and wait by the portal. After 20 seconds it collapses with a sound and standing there does nothing.",
+    "Tell me if it closes at the wrong time or not at all."],
+   ["play", "Find", "Find the escape portal by its hum", "you",
+    "Stay until the last minute. As the Ophan arrives, a hum starts somewhere deep in the castle. Follow it until you see the portal's glow.",
+    "Tell me if the hum is too quiet or too loud, or the room too easy or too hard to reach."],
+   ["play", "Leave", "Leave a friend behind", "you",
+    "One player stands in the escape portal for 4 seconds. They leave with what is in it; the other is left behind.",
+    "Tell me if anyone on the pad is left behind, or anyone off it is saved."]
+  ]
+ },
+ "changes": [
+  ["chg", "Arrival portal", "Closes at 20 seconds.", ["Open the whole raid", "Open for 20 seconds"], "PortalSchedule.cs, ExtractionZone.cs.", {"src": "docs/generated/escape-portal/run-4/arrival-host.png", "caption": "The arrival portal, before it closes (co-op run 4, host)."}],
+  ["new", "Escape portal", "Opens deep in the castle as the Ophan arrives, with a hum and a glow.", ["None", "The farthest third of the castle by walking distance, from the seed"], "CastleEscapePlanner.cs, RaidDirector.cs, AudioDirector.cs, PortalGlow.cs.", {"src": "docs/generated/escape-portal/run-4/escape-client.png", "caption": "The escape portal in an upper room, as the client saw it (co-op run 4)."}],
+  ["chg", "Leaving countdown", "A shorter countdown.", ["8 seconds", "4 seconds"], "GameServices.cs.", null],
+  ["new", "Guard awareness", "Merged from AjsAgent/guard-deep-dive-0031e3.", ["On its own branch", "In this branch; guard tests 36/36 and 185/185"], "Guards/, issue #479.", {"src": "docs/generated/escape-portal/merged/client-view.png", "caption": "A co-op raid after the merge, client view."}]
+ ],
+ "wrapup": {
+  "summary": "The escape portal is built and the guard work is merged, both pushed on AjsAgent/gym-with-demand-page.",
+  "changing": "How a raid ends: no leaving early, and only the escape portal gets you out.",
+  "blocking": "Nothing. You asked to skip QA; play it when you like.",
+  "next": "The way-home flash fix if you want it, then the debt removal in its own thread.",
+  "todo": [
+   "Play a raid in co-op.",
+   "Tap <b>Copy my reply</b> if you want to send a result.",
+   "Send it with \"QA passed: hidden escape portal\", or tell me what felt wrong."
+  ]
+ }
+}
