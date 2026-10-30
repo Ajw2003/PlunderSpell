@@ -34,6 +34,15 @@ the unused two-person code is still in `LootPickup` (`InitiateDualCarry`) and
 covering both directions, loot syncing, saving and travelling, and the haul pile at the far end of the Lair. Kept as
 a fallback before the closing portal, the guard merge and the debt removal. Leave it untouched.
 
+**Since the backup, on `AjsAgent/gym-with-demand-page` (2026-10-29, aj skipped QA):** the arrival portal closes at
+20 s and a hidden escape portal opens deep in the castle as the Ophan arrives (#551 to #556, `raid.md`), and the guard
+awareness branch `AjsAgent/guard-deep-dive-0031e3` is merged in (#479). After the merge: guard tests 36/36 editor and
+185/185 play mode; a co-op raid (Editor host, built client) set out with 18 guards, both machines showed the same
+arrival portal, it closed at 20 s on both, and both returned to the Lair with the raid scene unloaded
+(`docs/generated/escape-portal/merged/`). Known and not fixed: on the way home the castle vanishes about 2 frames
+before the loading card is up (`docs/generated/scene-switch/fade-4`); the two RaidScene play-mode tests that open the
+scene alone fail since the split; after a host-forced return the client's game state reads `Playing` in the Lair.
+
 **Current, checked 2026-10-11 by patch content (`git cherry`) against every branch.** The real
 baseline is **`claude/staging-2026-10-11`**: `claude/merge-2026-10-08` (PR #370, tracked by #368)
 plus the wizard plan docs (#349). `main` is 189 commits behind it and has nothing it lacks. It
