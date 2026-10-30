@@ -124,6 +124,25 @@ by the gatehouse, and nothing exists outside the curtain wall.
   the curtain wall's outer face, called from `RaidDirector.SealCastle` every raid. RaidScene's
   ground covers only the ring plus a 4 m apron.
 
+### The arrival portal closes; a hidden escape portal opens (planned, 2026-10-29)
+
+**Status: design approved, not built** (Decisions, "Design approved: the arrival portal closes; a hidden escape portal
+opens"; `docs/plans/hidden-escape-portal.html`). Replaces "the way in is the way out" above once built.
+
+- **Driven by the replicated clock.** Every peer already has the raid clock (`ExtractionZone._timeRemaining`, a
+  SyncVar). The arrival portal is open while less than `GuardArrivalGrace.Seconds` (20 s) of the raid has passed; the
+  escape portal is open while `TimeRemaining <= OphanDemandTuning.HuntWindowSeconds` (60 s), the same moment the
+  Ophan arrives (`OphanOfHours.ArriveWhenTheHuntWindowOpens`). So no new state crosses the network.
+- **Where it opens.** At castle build, every peer ranks the modules by nav-graph walking distance from the arrival
+  (`CastleNavGraph.FindPath`), never the arrival module, and picks one from the farthest third with the raid seed on
+  its own RNG stream. The castle is built behind the loading card, so this cost lands there.
+- **Found by sound and light.** A looping 3D hum on the portal, louder nearer it (logarithmic roll-off), and the
+  portal's glow as a light that lights its room and spills through open doorways, no beam above the roofs.
+- **Leaving.** One `ExtractionZone` moves from the arrival to the escape room when the escape portal opens. Standing in
+  it runs a 4-second countdown (was 8, `GameServices`); when it completes, everyone on the pad leaves with what is in
+  it, the raid resolves and the portal closes. Anyone not on the pad is left behind, as `CountLeftBehind` already
+  counts.
+
 ### Lobby size (2026-09-26, #154)
 
 The garrison grows with the lobby, so a four-player raid is not tuned for one. The server passes

@@ -3,6 +3,22 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-29 — Design approved: the arrival portal closes; a hidden escape portal opens
+
+**Status.** Decided by the owner: "Design approved: hidden escape portal 1A 2A 3A 4*" on
+`docs/plans/hidden-escape-portal.html`, with his own answer to choice 4.
+
+**Why.** aj: the portal stayed open the whole raid, so a team could leave before the Ophan arrived, which "nullifies the
+threat of the ophan entirely".
+
+**What.** The arrival portal closes for good when the guards' 20-second grace ends. As the Ophan arrives (1 minute
+left of 5), an escape portal opens in a room picked from the seed among the farthest third by walking distance from the
+arrival (1A), and stays open until the clock ends (2A). It is found by a sound that grows louder nearer it and a glow
+that lights only its room and spills through open doorways (3A). Choice 4, aj's own answer: "4 second count down but
+when you leave it closes and like repo you can leave your friends behind". Read as: standing in it runs a 4-second
+countdown (was 8); when it completes, everyone on the pad leaves with what is in it, the portal closes, and anyone
+not on it is left behind, as the raid ending already does.
+
 ## 2026-10-29 — One scene at a time, behind a loading screen
 
 **Status.** Decided by the owner: "get rid of them don't keep them loaded they only exist in the scene they belong in
