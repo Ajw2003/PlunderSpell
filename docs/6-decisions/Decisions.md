@@ -3,6 +3,14 @@
 Append-only. An entry is never rewritten or deleted; the one allowed edit is flipping its
 `Status` line to `Superseded` when a later entry replaces it. Newest entry at the top.
 
+## 2026-10-31 — The escape portal closes on the first departure, so the team must leave together
+
+**Status.** Decided by the owner, restating choice 4 of "Design approved: hidden escape portal": "4 second count down
+but the portal closes as soon as the first person goes through, so like repo you must work as a team". No code change:
+the build already does this. When the countdown ends, everyone on the pad leaves at that moment and the portal is gone.
+Co-op run `docs/generated/escape-portal/team-1`: the host left alone, and both machines counted 1 left behind. A player
+left behind is returned to the Lair at once, without what they carried.
+
 ## 2026-10-29 — Design approved: the arrival portal closes; a hidden escape portal opens
 
 **Status.** Decided by the owner: "Design approved: hidden escape portal 1A 2A 3A 4*" on

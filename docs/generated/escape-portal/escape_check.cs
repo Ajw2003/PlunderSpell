@@ -66,7 +66,7 @@ if (action == "phase")
 {
     var gs = Get(T("Plunderspell.Core.GameServices"), "GameState");
     return "phase " + Get(director, "Phase") + ", game state " + gs.GetType().GetProperty("CurrentState").GetValue(gs)
-        + ", raid scene " + (FindAll("Plunderspell.Extraction.ExtractionZone").Length > 0 ? "loaded" : "unloaded");
+        + ", left behind " + Get(director, "LastPlayersLeftBehind") + ", raid scene " + (FindAll("Plunderspell.Extraction.ExtractionZone").Length > 0 ? "loaded" : "unloaded");
 }
 var zone = FindAll("Plunderspell.Extraction.ExtractionZone")[0];
 var zt = ((UnityEngine.Component)zone).transform;
